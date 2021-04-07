@@ -1,7 +1,7 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "dev": "concurrently \"expo start\" \"nodemon server/src/index.js\"",
+    "dev": "concurrently \"npm install concurrently\" \"yarn\" \"cd server\" \"npm install\" \"cd ..\" \"expo start\" \"nodemon server/src/index.js\"",
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
