@@ -52,7 +52,6 @@ const LoginScreen = () => {
           autoCompleteType={"email"}
           style={{
             fontSize: 18,
-            outlineWidth: 0,
             width: "90%",
             margin: "5%",
             borderBottomColor: "#333",
@@ -70,7 +69,6 @@ const LoginScreen = () => {
           secureTextEntry={true}
           style={{
             fontSize: 18,
-            outlineWidth: 0,
             width: "90%",
             margin: "5%",
             color: "#333",

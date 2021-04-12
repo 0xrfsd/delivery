@@ -14,6 +14,9 @@ let userSchema = new mongoose.Schema({
   senha: {
     type: String,
   },
+  tipo: {
+    type: String
+  },
   cpf: {
     type: Number,
   },

@@ -15,6 +15,7 @@ const ProfileScreen = ({ navigation }) => {
   const [userData, setUserData] = React.useState({});
   const [userNome, setUserNome] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
+  const [userTipo, setUserTipo] = React.useState("");
 
   const getToken = async () => {
 
@@ -30,6 +31,9 @@ const ProfileScreen = ({ navigation }) => {
 
         var e = d.email.split('"').join("");
         setUserEmail(e);
+
+        var t = d.tipo.split('"').join("");
+        setUserTipo(t);
       });
     } catch (e) {
       // error reading value
@@ -63,6 +67,7 @@ const ProfileScreen = ({ navigation }) => {
     >
       <Text style={{ color: "#333" }}>{userNome}</Text>
       <Text style={{ color: "#333" }}>{userEmail}</Text>
+      <Text style={{ color: "#333" }}>{userTipo}</Text>
       <Pressable
         style={{
           borderRadius: 10,

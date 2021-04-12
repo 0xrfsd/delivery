@@ -40,8 +40,13 @@ app.post("/register", async (req, res) => {
   const nome = req.body.nome;
   const email = req.body.email;
   const psenha = req.body.senha;
+  const tipo = req.body.tipo;
 
   const exists = await User.findOne({ email }).lean();
+
+  if (tipo.length == 0) {
+    return res.json({ status: "error", error: "Your tipo cannot be null" });
+  }
 
   if (nome.length == 0) {
     return res.json({ status: "error", error: "Your name cannot be null" });
@@ -71,6 +76,7 @@ app.post("/register", async (req, res) => {
     email: email,
     username: nome,
     senha: senha,
+    tipo: tipo,
   });
   await user.save();
 
@@ -79,6 +85,7 @@ app.post("/register", async (req, res) => {
       id: user.id,
       email: user.email,
       nome: user.username,
+      tipo: user.tipo,
     },
     JWT_SECRET
   );
@@ -110,6 +117,7 @@ app.post("/login", async (req, res) => {
         id: user._id,
         nome: user.username,
         email: user.email,
+        tipo: user.tipo,
       },
       JWT_SECRET
     );

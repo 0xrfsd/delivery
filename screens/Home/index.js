@@ -18,7 +18,12 @@ import Commerces from "./Commerces";
 import ImageCardOne from "../../assets/verduras.jpg";
 import ImageCardTwo from "../../assets/acougue.jpg";
 
-import { Fontisto, FontAwesome5, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import {
+  Fontisto,
+  FontAwesome5,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = React.useState({});
@@ -65,7 +70,7 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView>
-      <View style={{ justifyContent: "column" }}>
+      <View>
         <View
           style={{
             width: "100%",
@@ -136,7 +141,7 @@ const HomeScreen = ({ navigation }) => {
         <Carousel>
           <ImageBackground
             source={ImageCardOne}
-            imageStyle={{ borderRadius: 6 }}
+            imageStyle={{ borderRadius: 10 }}
             style={{
               height: 200,
               width: 250,
@@ -151,7 +156,6 @@ const HomeScreen = ({ navigation }) => {
                 display: "flex",
                 marginTop: "auto",
                 backgroundColor: "#333",
-                opacity: ".7",
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
               }}
@@ -161,7 +165,7 @@ const HomeScreen = ({ navigation }) => {
           </ImageBackground>
           <ImageBackground
             source={ImageCardTwo}
-            imageStyle={{ borderRadius: 6 }}
+            imageStyle={{ borderRadius: 10 }}
             style={{
               height: 200,
               width: 250,
@@ -176,7 +180,54 @@ const HomeScreen = ({ navigation }) => {
                 display: "flex",
                 marginTop: "auto",
                 backgroundColor: "#333",
-                opacity: ".7",
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+            >
+              <Text style={{ color: "#fff" }}>Açougue</Text>
+            </View>
+          </ImageBackground>
+          <ImageBackground
+            source={ImageCardOne}
+            imageStyle={{ borderRadius: 10 }}
+            style={{
+              height: 200,
+              width: 250,
+              marginRight: 10,
+            }}
+          >
+            <View
+              style={{
+                height: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                marginTop: "auto",
+                backgroundColor: "#333",
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+            >
+              <Text style={{ color: "#fff" }}>Mercearia</Text>
+            </View>
+          </ImageBackground>
+          <ImageBackground
+            source={ImageCardTwo}
+            imageStyle={{ borderRadius: 10 }}
+            style={{
+              height: 200,
+              width: 250,
+              marginRight: 10,
+            }}
+          >
+            <View
+              style={{
+                height: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+                display: "flex",
+                marginTop: "auto",
+                backgroundColor: "#333",
                 borderBottomLeftRadius: 10,
                 borderBottomRightRadius: 10,
               }}
@@ -189,7 +240,7 @@ const HomeScreen = ({ navigation }) => {
           Compre por categorias
         </Text>
         <Carousel>
-        <View
+          <View
             style={{
               display: "flex",
               flexDirection: "column",
@@ -233,7 +284,11 @@ const HomeScreen = ({ navigation }) => {
                 marginRight: 10,
               }}
             >
-              <MaterialCommunityIcons  name="food-drumstick" size={20} color={"#fff"} />
+              <MaterialCommunityIcons
+                name="food-drumstick"
+                size={20}
+                color={"#fff"}
+              />
             </View>
             <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
               Açougue
@@ -283,7 +338,11 @@ const HomeScreen = ({ navigation }) => {
                 marginRight: 10,
               }}
             >
-              <MaterialCommunityIcons name="fruit-cherries" size={20} color={"#fff"} />
+              <MaterialCommunityIcons
+                name="fruit-cherries"
+                size={20}
+                color={"#fff"}
+              />
             </View>
             <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
               Hortifruti
@@ -308,7 +367,11 @@ const HomeScreen = ({ navigation }) => {
                 marginRight: 10,
               }}
             >
-              <MaterialCommunityIcons name="bottle-wine" size={20} color={"#fff"} />
+              <MaterialCommunityIcons
+                name="bottle-wine"
+                size={20}
+                color={"#fff"}
+              />
             </View>
             <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
               Bebidas
@@ -383,7 +446,11 @@ const HomeScreen = ({ navigation }) => {
                 marginRight: 10,
               }}
             >
-              <MaterialIcons name="cleaning-services" size={20} color={"#fff"} />
+              <MaterialIcons
+                name="cleaning-services"
+                size={20}
+                color={"#fff"}
+              />
             </View>
             <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
               Limpeza
@@ -408,7 +475,11 @@ const HomeScreen = ({ navigation }) => {
                 marginRight: 10,
               }}
             >
-              <MaterialCommunityIcons name="soy-sauce" size={20} color={"#fff"} />
+              <MaterialCommunityIcons
+                name="soy-sauce"
+                size={20}
+                color={"#fff"}
+              />
             </View>
             <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
               Condimentos

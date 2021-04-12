@@ -192,7 +192,7 @@ const IntroScreen = ({ navigation }) => {
               navigation.navigate('Register')
             }}
           >
-            <Text style={{ fontWeight: "light", color: "#333" }}>
+            <Text style={{ color: "#333" }}>
               Ainda não possui uma conta? <Text style={{ fontWeight: 'bold' }}>Crie agora!</Text>
             </Text>
           </TouchableOpacity>
@@ -212,7 +212,7 @@ const IntroScreen = ({ navigation }) => {
               navigation.navigate('Login')
             }}
           >
-            <Text style={{ fontWeight: "light", color: "#333" }}>
+            <Text style={{ color: "#333" }}>
               Já possui uma conta? <Text style={{ fontWeight: 'bold' }}>Entre agora!</Text>
             </Text>
           </TouchableOpacity>

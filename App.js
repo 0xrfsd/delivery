@@ -8,21 +8,23 @@ import {
   TouchableOpacity,
   Alert,
   Pressable,
-  StatusBar
+  StatusBar,
+  Platform,
 } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeScreen from './screens/Home';
-import ProfileScreen from './screens/Profile';
-import IntroScreen from './screens/Intro';
-import LoginScreen from './screens/Login';
-import RegisterScreen from './screens/Register';
+import HomeScreen from "./screens/Home";
+import ProfileScreen from "./screens/Profile";
+import IntroScreen from "./screens/Intro";
+import LoginScreen from "./screens/Login";
+import RegisterScreen from "./screens/Register";
 
 import { AuthContext } from "./Context";
 
-import HomeTab from './HomeTab';
+import HomeTab from "./HomeTab";
 
+import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const NestedStack = createStackNavigator();
@@ -30,7 +32,11 @@ const NestedStack = createStackNavigator();
 const IntroStack = () => {
   return (
     <NestedStack.Navigator>
-      <NestedStack.Screen name="Intro" component={IntroScreen} options={{ headerShown: false }} />
+      <NestedStack.Screen
+        name="Intro"
+        component={IntroScreen}
+        options={{ headerShown: false }}
+      />
       <NestedStack.Screen name="Login" component={LoginScreen} />
       <NestedStack.Screen name="Register" component={RegisterScreen} />
     </NestedStack.Navigator>
@@ -40,12 +46,40 @@ const IntroStack = () => {
 const RootStack = createStackNavigator();
 
 const App = () => {
+  const [userData, setUserData] = React.useState({});
+  const [userNome, setUserNome] = React.useState("");
+  const [userEmail, setUserEmail] = React.useState("");
+  const [userTipo, setUserTipo] = React.useState("");
+
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@token");
+
       if (value !== null) {
         setIsAuth(true);
       }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  const getData = async () => {
+    try {
+      await AsyncStorage.getItem("@token").then((valueData) => {
+        var t = valueData.split('"').join("");
+
+        var d = jwt_decode(t);
+        setUserData(d);
+
+        var n = d.nome.split('"').join("");
+        setUserNome(n);
+
+        var e = d.email.split('"').join("");
+        setUserEmail(e);
+
+        var t = d.tipo.split('"').join("");
+        setUserTipo(t);
+      });
     } catch (e) {
       // error reading value
     }
@@ -56,30 +90,37 @@ const App = () => {
     //   setIsLoading(!isLoading)
     // }, 1000)
     getToken();
+    getData();
   }, []);
 
   const [isAuth, setIsAuth] = React.useState(null);
 
   return (
     <>
-    <StatusBar barStyle={"dark-content"} />
-    <NavigationContainer>
-      <AuthContext.Provider value={{ isAuth, setIsAuth }}>
-        <RootStack.Navigator>
-          {isAuth ? (
-            <>
-            <RootStack.Screen name="Home" component={HomeTab} options={{ headerShown: false }}/>
-            </>
-          ) : (
-            <RootStack.Screen
-              name="Intro"
-              component={IntroStack}
-              options={{ headerShown: false }}
-            />
-          )}
-        </RootStack.Navigator>
-      </AuthContext.Provider>
-    </NavigationContainer>
+      <StatusBar
+        barStyle={Platform.OS === "android" ? "light-content" : "dark-content"}
+      />
+      <NavigationContainer>
+        <AuthContext.Provider value={{ isAuth, setIsAuth }}>
+          <RootStack.Navigator>
+            {isAuth ? (
+              <>
+                <RootStack.Screen
+                  name="Home"
+                  component={HomeTab}
+                  options={{ headerShown: false }}
+                />
+              </>
+            ) : (
+              <RootStack.Screen
+                name="Intro"
+                component={IntroStack}
+                options={{ headerShown: false }}
+              />
+            )}
+          </RootStack.Navigator>
+        </AuthContext.Provider>
+      </NavigationContainer>
     </>
   );
 };

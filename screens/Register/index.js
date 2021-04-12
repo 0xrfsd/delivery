@@ -1,6 +1,6 @@
 import React from "react";
 
-import { View, Text, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Picker } from "react-native";
 
 import { AuthContext } from "../../Context";
 import axios from "axios";
@@ -17,17 +17,20 @@ const RegisterScreen = () => {
   const [nomeReq, setNomeReq] = React.useState(""); // nome hook
   const [senhaReq, setSenhaReq] = React.useState(""); // senha hook
   const [error, setError] = React.useState("");
+  const [tipoReq, setTipoReq] = React.useState("consumer");
 
   const nameTextInput = React.createRef();
   const emailTextInput = React.createRef();
   const passwordTextInput = React.createRef();
 
   const register = async () => {
+
     await axios
       .post("http://192.168.1.104:3000/register", {
         nome: nomeReq,
         email: emailReq,
         senha: senhaReq,
+        tipo: tipoReq,
       })
       .then(async (response) => {
         if (response.status == 200) {
@@ -50,7 +53,6 @@ const RegisterScreen = () => {
           ref={nameTextInput}
           type="email"
           style={{
-            outlineWidth: 0,
             fontSize: 18,
             width: "90%",
             margin: "5%",
@@ -69,7 +71,6 @@ const RegisterScreen = () => {
           autoCorrect={false}
           ref={emailTextInput}
           style={{
-            outlineWidth: 0,
             fontSize: 18,
             width: "90%",
             margin: "5%",
@@ -87,7 +88,6 @@ const RegisterScreen = () => {
           ref={passwordTextInput}
           secureTextEntry={true}
           style={{
-            outlineWidth: 0,
             width: "90%",
             fontSize: 18,
             margin: "5%",
@@ -100,6 +100,7 @@ const RegisterScreen = () => {
           }}
         />
         {error ? <Text>{error}</Text> : null}
+      <Text style={{ color: '#333'}}>{tipoReq}</Text>
         <TouchableOpacity
           style={{
             width: "90%",
