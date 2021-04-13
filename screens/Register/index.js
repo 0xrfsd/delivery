@@ -100,12 +100,12 @@ const RegisterScreen = () => {
           }}
         />
         {error ? <Text>{error}</Text> : null}
-      <Text style={{ color: '#333'}}>{tipoReq}</Text>
         <TouchableOpacity
           style={{
             width: "90%",
             marginLeft: "5%",
             marginRight: "5%",
+            marginTop: "2%",
             borderRadius: 10,
             color: "#333",
           }}
@@ -155,7 +155,7 @@ const RegisterScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             fontSize: 18,
             width: "90%",
@@ -182,7 +182,7 @@ const RegisterScreen = () => {
             Registrar com Facebook
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );

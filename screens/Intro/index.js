@@ -88,7 +88,7 @@ const IntroScreen = ({ navigation }) => {
           }}
         >
           <Text style={{ fontWeight: "bold", color: "#fff" }}>
-            Cadastre-se agora mesmo!
+            Você está pronto pra começar a pedir!
           </Text>
         </TouchableOpacity>
       </>
@@ -329,7 +329,7 @@ const slides = [
   {
     key: "s5",
     title: "Oportunidade de Emprego",
-    text: "Seja nosso parceiro.",
+    text: "Trabalhe conosco, Seja nosso parceiro.",
     image: {
       uri:
         "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_bus_ticket_booking.png",

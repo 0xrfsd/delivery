@@ -49,7 +49,7 @@ const LoginScreen = () => {
         <TextInput
           ref={usernameTextInput}
           autoCorrect={false}
-          autoCompleteType={"email"}
+          autoCompleteType="email"
           style={{
             fontSize: 18,
             width: "90%",
@@ -58,7 +58,7 @@ const LoginScreen = () => {
             borderRadius: 10,
             color: "#333",
           }}
-          placeholder="Telefone"
+          placeholder="Email"
           autoCapitalize="none"
           onChangeText={(email) => {
             setEmail(email);
@@ -66,6 +66,7 @@ const LoginScreen = () => {
         />
         <TextInput
           ref={passwordTextInput}
+          autoCompleteType="password"
           secureTextEntry={true}
           style={{
             fontSize: 18,
@@ -83,6 +84,7 @@ const LoginScreen = () => {
             width: "90%",
             marginLeft: "5%",
             marginRight: "5%",
+            marginTop: "2%",
             borderRadius: 10,
             color: "#333",
           }}
@@ -132,7 +134,7 @@ const LoginScreen = () => {
             </Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             fontSize: 18,
             width: "90%",
@@ -159,7 +161,7 @@ const LoginScreen = () => {
               Entrar com Facebook
             </Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   );
