@@ -21,7 +21,7 @@ const LoginScreen = () => {
 
   const login = async () => {
     await axios
-      .post("http://192.168.1.104:3000/login", {
+      .post("http://192.168.0.85:3000/login", {
         email: email,
         senha: senha,
       })

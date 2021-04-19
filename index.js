@@ -41,6 +41,7 @@ app.post("/register", async (req, res) => {
   const email = req.body.email;
   const psenha = req.body.senha;
   const tipo = req.body.tipo;
+  const carrinho = req.body.carrinho;
 
   const exists = await User.findOne({ email }).lean();
 
@@ -77,6 +78,7 @@ app.post("/register", async (req, res) => {
     username: nome,
     senha: senha,
     tipo: tipo,
+    carrinho: carrinho,
   });
   await user.save();
 
@@ -86,11 +88,31 @@ app.post("/register", async (req, res) => {
       email: user.email,
       nome: user.username,
       tipo: user.tipo,
+      carrinho: user.carrinho,
     },
     JWT_SECRET
   );
 
   return res.json({ status: "ok", data: token });
+});
+
+app.post("/cart", async (req, res) => {
+  const userId = req.body.userId;
+  
+  const items = req.body.items;
+  const qtd = req.body.qtd;
+  const total = req.body.total;
+
+  const id = { _id: userId };
+  const update = { carrinho: { items, qtd, total} };
+  
+  await User.findByIdAndUpdate(id, update, {
+    new: true,
+    useFindAndModify: false,
+    upsert: true // Make this update into an upsert
+  });
+
+  return res.json({ status: "ok", data: 'cart added'})
 });
 
 app.post("/login", async (req, res) => {
@@ -128,7 +150,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.post('/order', async (req, res) => {
+app.post("/order", async (req, res) => {
   const userId = req.body.userId;
   const commerceId = req.body.commerceId;
   const driverId = req.body.driverId;
@@ -145,7 +167,7 @@ app.post('/order', async (req, res) => {
     status: status,
   });
   await order.save();
-  
+
   const token = jwt.sign(
     {
       userId: user.userId,
@@ -159,10 +181,9 @@ app.post('/order', async (req, res) => {
   );
 
   return res.json({ status: "order registered!", data: token });
+});
 
-})
-
-app.post('/commerce', async (req, res) => {
+app.post("/commerce", async (req, res) => {
   const image = req.body.image;
   const nome = req.body.nome;
   const categoria = req.body.categoria;
@@ -190,7 +211,7 @@ app.post('/commerce', async (req, res) => {
     delivery: delivery,
     pedidoMinimo: pedidoMinimo,
     abre: abre,
-    fecha: fecha
+    fecha: fecha,
   });
   await commerce.save();
 
@@ -213,12 +234,11 @@ app.post('/commerce', async (req, res) => {
   );
 
   return res.json({ status: "commerce registered!", data: token });
-
-})
+});
 
 app.listen(PORT, () => {
-    console.log(`Server running on port: ${PORT}`)
-})
+  console.log(`Server running on port: ${PORT}`);
+});
 
 // const express = require('express');
 // const mongoose = require('mongoose');

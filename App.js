@@ -27,6 +27,9 @@ import HomeTab from "./HomeTab";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import CommerceScreen from "./screens/Commerce/";
+import CategoriaScreen from "./screens/Categoria/";
+
 const NestedStack = createStackNavigator();
 
 const IntroStack = () => {
@@ -50,6 +53,7 @@ const App = () => {
   const [userNome, setUserNome] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
   const [userTipo, setUserTipo] = React.useState("");
+  const [loading, setLoading] = React.useState(true);
 
   const getToken = async () => {
     try {
@@ -85,10 +89,18 @@ const App = () => {
     }
   };
 
+  const Loading = () => {
+    return (
+      <View style={{ height: "100%", width: "100%", backgroundColor: "#333", justifyContent: "center", alignItems: "center"}}>
+        <Text style={{ color: "#fff", fontWeight: "bold" }}>Entrega +</Text>
+      </View>
+    );
+  };
+
   React.useEffect(() => {
-    // setTimeout(() => {
-    //   setIsLoading(!isLoading)
-    // }, 1000)
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
     getToken();
     getData();
   }, []);
@@ -100,27 +112,41 @@ const App = () => {
       <StatusBar
         barStyle={Platform.OS === "android" ? "light-content" : "dark-content"}
       />
-      <NavigationContainer>
-        <AuthContext.Provider value={{ isAuth, setIsAuth }}>
-          <RootStack.Navigator>
-            {isAuth ? (
-              <>
+      {loading ? (
+        <Loading />
+      ) : (
+        <NavigationContainer>
+          <AuthContext.Provider value={{ isAuth, setIsAuth }}>
+            <RootStack.Navigator>
+              {isAuth ? (
+                <>
+                  <RootStack.Screen
+                    name="Home"
+                    component={HomeTab}
+                    options={{ headerShown: false }}
+                  />
+                  <RootStack.Screen
+                    name="Commerce"
+                    component={CommerceScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <RootStack.Screen
+                    name="Categoria"
+                    component={CategoriaScreen}
+                    options={{ headerShown: false }}
+                  />
+                </>
+              ) : (
                 <RootStack.Screen
-                  name="Home"
-                  component={HomeTab}
+                  name="Intro"
+                  component={IntroStack}
                   options={{ headerShown: false }}
                 />
-              </>
-            ) : (
-              <RootStack.Screen
-                name="Intro"
-                component={IntroStack}
-                options={{ headerShown: false }}
-              />
-            )}
-          </RootStack.Navigator>
-        </AuthContext.Provider>
-      </NavigationContainer>
+              )}
+            </RootStack.Navigator>
+          </AuthContext.Provider>
+        </NavigationContainer>
+      )}
     </>
   );
 };

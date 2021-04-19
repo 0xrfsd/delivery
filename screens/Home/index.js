@@ -6,17 +6,28 @@ import {
   ScrollView,
   SafeAreaView,
   TextInput,
-  ImageBackground,
+  Dimensions,
+  Image,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
 
+import CachedImage from 'react-native-expo-cached-image';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
+
+import storeCart from "../../storeCart";
 
 import { Carousel } from "./Carousel";
 import Commerces from "./Commerces";
 
+import { Button } from "../../components/button/Button";
+
 import ImageCardOne from "../../assets/verduras.jpg";
 import ImageCardTwo from "../../assets/acougue.jpg";
+
+import { Carrinho } from "../../components/modals/Carrinho";
+import { Entrega } from "../../components/modals/Entrega";
 
 import {
   Fontisto,
@@ -28,8 +39,27 @@ import {
 const HomeScreen = ({ navigation }) => {
   const [userData, setUserData] = React.useState({});
   const [userNome, setUserNome] = React.useState("");
+  const [userId, setUserId] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
-  const [counter, setCounter] = React.useState(0);
+  const [showFilter, setShowFilter] = React.useState(false);
+
+
+  const [searchTerm, setSearchTerm] = React.useState("");
+  const searchInput = React.createRef();
+
+  const formatData = (commerces, numColumns) => {
+    const totalRows = Math.floor(commerces.length / numColumns);
+    let totalLastRow = commerces.length - totalRows * numColumns;
+
+    while (totalLastRow !== 0 && totalLastRow !== numColumns) {
+      commerces.push({ key: "blank", empty: true });
+      commerces++;
+    }
+    return commerces;
+  };
+
+  const WIDTH = Dimensions.get("window").width;
+  const numColumns = 2;
 
   const getToken = async () => {
     try {
@@ -44,450 +74,407 @@ const HomeScreen = ({ navigation }) => {
 
         var e = d.email.split('"').join("");
         setUserEmail(e);
+
+        var i = d.id.split('"').join("");
+        setUserId(i);
       });
     } catch (e) {
       // error reading value
     }
   };
 
-  const Greet = () => {
-    return (
-      <>
-        <Text style={{ color: "#333", fontSize: 26 }}>Seja bem vindo!</Text>
-        <Text
-          style={{ color: "#333", fontSize: 26, fontWeight: "bold" }}
-          onPress={() => navigation.navigate("Profile")}
-        >
-          {userNome}
-        </Text>
-      </>
-    );
-  };
+  // const cart = async () => {
+
+  //   await axios
+  //     .post("http://192.168.1.104:3000/cart", {
+  //       userId: userId,
+  //       qtd: qtd,
+  //       items: items,
+  //       total: items.item.price * items.item.qtd
+  //     })
+  //     .then(async (response) => {
+  //       if (response.status == 200) {
+  //         if (response.data.data) {
+  //           await storeCart(response.data.data);
+  //           setIsAuth(true);
+  //         } else {
+  //           setError(response.data.error);
+  //         }
+  //       }
+  //     });
+  // };
 
   React.useEffect(() => {
     getToken();
   }, []);
 
+  const commerces = [
+    {
+      key: String(Math.random()),
+      image: ImageCardOne,
+      name: "Comercio A",
+      rate: "5.0",
+      location: "Av. Pres. Kennedy 290",
+      timing: "10-30 min",
+    },
+    {
+      key: String(Math.random()),
+      image: ImageCardTwo,
+      name: "Comercio B",
+      rate: "5.0",
+      location: "Av. Pres. Kennedy 290",
+      timing: "10-30 min",
+    },
+    {
+      key: String(Math.random()),
+      image: ImageCardOne,
+      name: "Comercio C",
+      rate: "5.0",
+      location: "Av. Pres. Kennedy 290",
+      timing: "10-30 min",
+    },
+    {
+      key: String(Math.random()),
+      image: ImageCardTwo,
+      name: "Comercio D",
+      rate: "5.0",
+      location: "Av. Pres. Kennedy 290",
+      timing: "10-30 min",
+    },
+  ];
+
+  const categorias = [
+    {
+      image: ImageCardOne,
+      key: String(Math.random()),
+      name: "Mercearia",
+      mercados: ["Big", "Bog", "Bug"],
+    },
+    {
+      image: ImageCardTwo,
+      key: String(Math.random()),
+      name: "Açougue",
+      mercados: ["Big", "Bog", "Bug"],
+    },
+    {
+      image: ImageCardOne,
+      key: String(Math.random()),
+      name: "Açougue",
+      mercados: ["Big", "Bog", "Bug"],
+    },
+    {
+      image: ImageCardTwo,
+      key: String(Math.random()),
+      name: "Açougue",
+      mercados: ["Big", "Bog", "Bug"],
+    },
+  ];
+
+  const modal = [];
+
+  const renderCarrinho = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => modal[0].openModal()}
+        style={{ marginTop: '-1.5%', display: "flex", flexDirection: "column", marginRight: 20 }}
+      >
+        <FontAwesome5
+          key={1}
+          style={{ marginTop: 1 }}
+          name="shopping-cart"
+          size={20}
+          color={"#333"}
+        />
+        <View
+          style={{
+            marginLeft: 25,
+            position: "absolute",
+            display: "flex",
+            flexDirection: "row",
+            backgroundColor: "#333",
+            padding: 3,
+            paddingRight: 3.5,
+            paddingBottom: 3.5,
+            height: "auto",
+            width: 25,
+            borderRadius: 100,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "#fff" }}>{counter}</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
+  const renderEntrega = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => modal[1].openModal()}
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            marginRight: 5,
+            marginTop: 5,
+            fontSize: 14,
+            textDecorationLine: "underline",
+          }}
+        >
+          Av. Pres. Kennedy 289
+        </Text>
+        <FontAwesome5
+          name="angle-down"
+          size={15}
+          style={{ marginTop: 5 }}
+          color={"#333"}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   return (
     <SafeAreaView>
       <View>
+        <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
+          <TextInput
+            onChangeText={(e) => {
+              setShowFilter(true);
+              setSearchTerm(e.toUpperCase());
+            }}
+            onBlur={() => {
+              searchInput.current.clear();
+              setShowFilter(false);
+            }}
+            ref={searchInput}
+            placeholder="Pesquise por supermercados ou categorias"
+            style={{
+              borderRadius: 5,
+              padding: 10,
+              width: "75%",
+              marginLeft: "5%",
+              marginRight: "2%",
+              marginBottom: "5%",
+              backgroundColor: "#fff",
+              height: 50,
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              searchInput.current.clear();
+              setShowFilter(!showFilter);
+              Keyboard.dismiss();
+            }}
+            style={{
+              width: "15%",
+              height: 50,
+              borderRadius: 5,
+              backgroundColor: "#333",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {showFilter ? (
+              <MaterialIcons name="close" size={20} color={"#fff"} />
+            ) : (
+              <Fontisto name="shopping-store" size={20} color={"#fff"} />
+            )}
+          </TouchableOpacity>
+        </View>
+        {showFilter ? (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              backgroundColor: "transparent",
+              paddingLeft: 5,
+              display: "flex",
+            }}
+          >
+            <Carousel>
+              <Text>{searchTerm}</Text>
+            </Carousel>
+          </View>
+        ) : null}
         <View
           style={{
+            justifyContent: "center",
             width: "100%",
             height: "auto",
-            padding: 10,
-            backgroundColor: "transparent",
-            justifyContent: "space-around",
-            alignItems: "center",
-            display: "flex",
-            flexDirection: "row",
           }}
-          around
         >
           <View
             style={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-around",
-              alignItems: "center",
-              marginLeft: "-5%",
+              justifyContent: "space-between",
+              marginRight: 20,
             }}
           >
-            <FontAwesome5 name="map-pin" size={15} color={"#333"} />
-            <Text
-              style={{
-                marginLeft: 5,
-                marginTop: 5,
-                fontSize: 14,
-                textDecorationLine: "underline",
-              }}
-            >
-              Av. Presidente Kennedy 289
-            </Text>
-          </View>
-          <View style={{ display: "flex", flexDirection: "column" }}>
-            <FontAwesome5 name="shopping-cart" size={20} color={"#333"} />
             <View
               style={{
-                marginLeft: 25,
-                position: "absolute",
+                height: "auto",
+                paddingLeft: 20,
+                paddingBottom: 15,
+                backgroundColor: "transparent",
                 display: "flex",
-                flexDirection: "row",
-                backgroundColor: "#333",
-                height: 20,
-                width: 20,
-                borderRadius: 10,
-                justifyContent: "center",
-                alignItems: "center",
+                flexDirection: "column",
               }}
             >
-              <Text style={{ color: "#fff" }}>{counter}</Text>
+              <Text>Entregar em</Text>
+              {renderEntrega()}
+            </View>
+            <View
+              style={{
+                height: "auto",
+                paddingLeft: 20,
+                paddingBottom: 15,
+                backgroundColor: "transparent",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Text>Prazo de entrega</Text>
+              <View
+                style={{ display: "flex", marginTop: 5, flexDirection: "row" }}
+              >
+                <Text style={{ display: "flex", marginLeft: "auto" }}>
+                  10-25 min
+                </Text>
+                <FontAwesome5
+                  name="clock"
+                  size={15}
+                  style={{ marginLeft: 5, marginTop: 0 }}
+                  color={"#333"}
+                />
+              </View>
             </View>
           </View>
         </View>
-        <TextInput
-          placeholder="Pesquise por produtos"
-          style={{
-            borderRadius: 10,
-            padding: 10,
-            width: "90%",
-            margin: "5%",
-            backgroundColor: "#fff",
-            height: 50,
-          }}
-        />
       </View>
       <ScrollView>
-        <Carousel>
-          <ImageBackground
-            source={ImageCardOne}
-            imageStyle={{ borderRadius: 10 }}
-            style={{
-              height: 200,
-              width: 250,
-              marginRight: 10,
-            }}
-          >
-            <View
-              style={{
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-                marginTop: "auto",
-                backgroundColor: "#333",
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-          </ImageBackground>
-          <ImageBackground
-            source={ImageCardTwo}
-            imageStyle={{ borderRadius: 10 }}
-            style={{
-              height: 200,
-              width: 250,
-              marginRight: 10,
-            }}
-          >
-            <View
-              style={{
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-                marginTop: "auto",
-                backgroundColor: "#333",
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Açougue</Text>
-            </View>
-          </ImageBackground>
-          <ImageBackground
-            source={ImageCardOne}
-            imageStyle={{ borderRadius: 10 }}
-            style={{
-              height: 200,
-              width: 250,
-              marginRight: 10,
-            }}
-          >
-            <View
-              style={{
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-                marginTop: "auto",
-                backgroundColor: "#333",
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-          </ImageBackground>
-          <ImageBackground
-            source={ImageCardTwo}
-            imageStyle={{ borderRadius: 10 }}
-            style={{
-              height: 200,
-              width: 250,
-              marginRight: 10,
-            }}
-          >
-            <View
-              style={{
-                height: "20%",
-                justifyContent: "center",
-                alignItems: "center",
-                display: "flex",
-                marginTop: "auto",
-                backgroundColor: "#333",
-                borderBottomLeftRadius: 10,
-                borderBottomRightRadius: 10,
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Açougue</Text>
-            </View>
-          </ImageBackground>
-        </Carousel>
-        <Text style={{ marginLeft: "5%", fontSize: 22 }}>
-          Compre por categorias
+        <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
+          Compre por corredor
         </Text>
         <Carousel>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <Fontisto name="shopping-store" size={20} color={"#fff"} />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Mercearia
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="food-drumstick"
-                size={20}
-                color={"#fff"}
-              />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Açougue
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <FontAwesome5 name="bread-slice" size={20} color={"#fff"} />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Padaria
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="fruit-cherries"
-                size={20}
-                color={"#fff"}
-              />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Hortifruti
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="bottle-wine"
-                size={20}
-                color={"#fff"}
-              />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Bebidas
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialCommunityIcons name="cow" size={20} color={"#fff"} />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Latícineos
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialIcons name="clean-hands" size={20} color={"#fff"} />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Higíene
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialIcons
-                name="cleaning-services"
-                size={20}
-                color={"#fff"}
-              />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Limpeza
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View
-              style={{
-                height: 60,
-                width: 60,
-                backgroundColor: "#333",
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: 100,
-                marginRight: 10,
-              }}
-            >
-              <MaterialCommunityIcons
-                name="soy-sauce"
-                size={20}
-                color={"#fff"}
-              />
-            </View>
-            <Text style={{ height: 60, marginLeft: -10, marginTop: 5 }}>
-              Condimentos
-            </Text>
-          </View>
+          {categorias.map((categoria, index) => {
+            return (
+              <View key={index}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Categoria", {
+                      categoria: categoria.name,
+                      mercados: categoria.mercados,
+                    })
+                  }
+                >
+                  <CachedImage 
+                    key={categoria.key}
+                    source={categoria.image}
+                    style={{
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      height: 150,
+                      width: 200,
+                      marginRight: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      width: 200,
+                      padding: 10,
+                      height: "auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      display: "flex",
+                      backgroundColor: "#333",
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                  >
+                    <Text style={{ color: "#fff" }}>{categoria.name}</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
         </Carousel>
-        <Commerces />
+        <View>
+          <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
+            Compre por supermercados
+          </Text>
+          {commerces.map((commerce, index) => {
+            return (
+              <View key={index} style={{ padding: 20 }}>
+                <TouchableOpacity
+                  onPress={() =>
+                    navigation.navigate("Commerce", {
+                      name: commerce.name,
+                      rate: commerce.rate,
+                      location: commerce.location,
+                      time: commerce.time,
+                    })
+                  }
+                >
+                  <CachedImage 
+                    key={commerce.key}
+                    source={commerce.image}
+                    style={{
+                      borderTopLeftRadius: 10,
+                      borderTopRightRadius: 10,
+                      height: 100,
+                      width: "100%",
+                      marginRight: 10,
+                    }}
+                  />
+                  <View
+                    style={{
+                      width: "100%",
+                      padding: 10,
+                      height: "auto",
+                      justifyContent: "center",
+                      display: "flex",
+                      backgroundColor: "#333",
+                      borderBottomLeftRadius: 10,
+                      borderBottomRightRadius: 10,
+                    }}
+                  >
+                    <Text style={{ color: "#fff", fontSize: 20 }}>
+                      {commerce.name}
+                    </Text>
+                    <View style={{ display: "flex", flexDirection: "row" }}>
+                      <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
+                      <Text
+                        style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
+                      >
+                        •
+                      </Text>
+                      <Text style={{ color: "#fff" }}>{commerce.location}</Text>
+                      <Text
+                        style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
+                      >
+                        •
+                      </Text>
+                      <Text style={{ color: "#fff" }}>{commerce.timing}</Text>
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </View>
+        <View style={{ height: 150, alignItems: "center" }} />
       </ScrollView>
+        <Entrega
+          ref={(el) => {
+            modal[1] = el;
+          }}
+        />
     </SafeAreaView>
   );
 };

@@ -17,6 +17,9 @@ let userSchema = new mongoose.Schema({
   tipo: {
     type: String
   },
+  carrinho: {
+    type: Object
+  },
   cpf: {
     type: Number,
   },
