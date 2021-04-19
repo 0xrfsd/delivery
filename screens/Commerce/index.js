@@ -30,8 +30,14 @@ const CommerceScreen = ({ navigation, route }) => {
 
   const [showCart, setShowCart] = React.useState(false);
   const [showEntrega, setShowEntrega] = React.useState(false);
+
+  const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
+
+  React.useEffect(() => {
+  }, [])
+
 
   const produtos = [
     "Alface",
@@ -46,6 +52,22 @@ const CommerceScreen = ({ navigation, route }) => {
     "Carne Cupim",
     "Carne Coxão Mole",
   ];
+
+  const searchHandler = (e) => {
+    setSearchTerm(e)
+    if (e !== "") {
+        const resultItems = produtos.filter((produto) => {
+            return Array(produto)
+                .join(" ")
+                .toLowerCase()
+                .includes(e.toLowerCase());
+        });
+        setSearchResults(resultItems);
+    }
+    else {
+        setSearchResults(produtos);
+    }
+}
 
   const formatData = (produtos, numColumns) => {
     const totalRows = Math.floor(produtos.length / numColumns);
@@ -138,6 +160,7 @@ const CommerceScreen = ({ navigation, route }) => {
   };
 
   return (
+    <>
     <SafeAreaView>
       <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
         <View
@@ -168,22 +191,44 @@ const CommerceScreen = ({ navigation, route }) => {
         </View>
       </View>
       <View style={{ display: "flex", flexDirection: "row" }}>
+      <TouchableOpacity
+          onPress={() => {
+            searchInput.current.clear();
+            setShowFilter(!showFilter);
+            Keyboard.dismiss();
+          }}
+          style={{
+            marginLeft: "5%",
+            width: "13%",
+            height: 50,
+            borderRadius: 5,
+            backgroundColor: "#333",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          {showFilter ? (
+            <Fontisto name="minus-a" size={20} color={"#fff"} />
+          ) : (
+            <Fontisto name="nav-icon-list-a" size={20} color={"#fff"} />
+          )}
+        </TouchableOpacity>
         <TextInput
+          value={searchTerm}
           onChangeText={(e) => {
-            setShowFilter(true);
-            setSearchTerm(e.toUpperCase());
+            searchHandler(e);
           }}
           onBlur={() => {
+            // setSearchTerm("");
             searchInput.current.clear();
-            setShowFilter(false);
           }}
           ref={searchInput}
           placeholder="Pesquise por produtos ou marca"
           style={{
             borderRadius: 5,
             padding: 10,
-            width: "75%",
-            marginLeft: "5%",
+            width: "60%",
+            marginLeft: '2%',
             marginRight: "2%",
             marginBottom: "5%",
             backgroundColor: "#fff",
@@ -193,11 +238,11 @@ const CommerceScreen = ({ navigation, route }) => {
         <TouchableOpacity
           onPress={() => {
             searchInput.current.clear();
-            setShowFilter(!showFilter);
+            setSearchTerm("");
             Keyboard.dismiss();
           }}
           style={{
-            width: "15%",
+            width: "13%",
             height: 50,
             borderRadius: 5,
             backgroundColor: "#333",
@@ -205,135 +250,32 @@ const CommerceScreen = ({ navigation, route }) => {
             alignItems: "center",
           }}
         >
-          {showFilter ? (
+          {searchTerm ? (
             <MaterialIcons name="close" size={20} color={"#fff"} />
           ) : (
-            <Fontisto name="shopping-store" size={20} color={"#fff"} />
+            <Fontisto name="search" size={20} color={"#fff"} />
           )}
         </TouchableOpacity>
       </View>
-      {showFilter ? (
-        <View
-          style={{
-            width: "100%",
-            height: "100%",
-            backgroundColor: "transparent",
-            paddingLeft: 5,
-            display: "flex",
-          }}
-        >
-          <Carousel style={{ marginTop: "-5%" }}>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "#333",
-                borderRadius: 5,
-                marginRight: 5,
-                height: 35,
-                width: "auto",
-              }}
-            >
-              <Text style={{ color: "#fff" }}>Mercearia</Text>
-            </View>
-          </Carousel>
+      {showFilter 
+      ? (
+        <View style={{ width: '100%', height: '100%', padding: 20, backgroundColor: 'transparent' }}>
+          <TouchableOpacity>
+            <Text>Mercearia</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text>Mercearia</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text>Mercearia</Text>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Text>Mercearia</Text>
+          </TouchableOpacity>
         </View>
-      ) : null}
+      )
+      : null
+      }
       <FlatList
         style={{
           marginLeft: "5%",
@@ -341,17 +283,18 @@ const CommerceScreen = ({ navigation, route }) => {
           width: "90%",
           height: "77.3%",
         }}
-        data={formatData(produtos, numColumns)}
+        data={searchTerm ? formatData(searchResults, numColumns) : formatData(produtos, numColumns)}
         renderItem={_renderItem}
         keyExtractor={(item, index) => index.toString()}
         numColumns={numColumns}
       />
-      <Carrinho
-        ref={(el) => {
-          modal[0] = el;
-        }}
-      />
     </SafeAreaView>
+          <Carrinho
+          ref={(el) => {
+            modal[0] = el;
+          }}
+        />
+        </>
   );
 };
 

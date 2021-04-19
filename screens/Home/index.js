@@ -42,11 +42,32 @@ const HomeScreen = ({ navigation }) => {
   const [userEmail, setUserEmail] = React.useState("");
 
   const [showFilter, setShowFilter] = React.useState(false);
-
   const [counter, setCounter] = React.useState(0);
 
+  const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
+
+  const searchHandler = (e) => {
+    setSearchTerm(e);
+    if (e !== "") {
+      e = e.replace(new RegExp("[ÁÀÂÃ]", "gi"), "a");
+      e = e.replace(new RegExp("[ÉÈÊ]", "gi"), "e");
+      e = e.replace(new RegExp("[ÍÌÎ]", "gi"), "i");
+      e = e.replace(new RegExp("[ÓÒÔÕ]", "gi"), "o");
+      e = e.replace(new RegExp("[ÚÙÛ]", "gi"), "u");
+      e = e.replace(new RegExp("[Ç]", "gi"), "c");
+      const resultItems = commerces.filter((commerce) => {
+        return Object.values(commerce)
+          .join(" ")
+          .toLowerCase()
+          .includes(e.toLowerCase());
+      });
+      setSearchResults(resultItems);
+    } else {
+      setSearchResults(commerces);
+    }
+  };
 
   const formatData = (commerces, numColumns) => {
     const totalRows = Math.floor(commerces.length / numColumns);
@@ -177,7 +198,12 @@ const HomeScreen = ({ navigation }) => {
     return (
       <TouchableOpacity
         onPress={() => modal[0].openModal()}
-        style={{ marginTop: '-1.5%', display: "flex", flexDirection: "column", marginRight: 20 }}
+        style={{
+          marginTop: "-1.5%",
+          display: "flex",
+          flexDirection: "column",
+          marginRight: 20,
+        }}
       >
         <FontAwesome5
           key={1}
@@ -244,13 +270,13 @@ const HomeScreen = ({ navigation }) => {
       <View>
         <View style={{ marginTop: 20, display: "flex", flexDirection: "row" }}>
           <TextInput
+            value={searchTerm}
             onChangeText={(e) => {
               setShowFilter(true);
-              setSearchTerm(e.toUpperCase());
+              searchHandler(e);
             }}
             onBlur={() => {
-              searchInput.current.clear();
-              setShowFilter(false);
+              Keyboard.dismiss();
             }}
             ref={searchInput}
             placeholder="Pesquise por supermercados ou categorias"
@@ -268,7 +294,10 @@ const HomeScreen = ({ navigation }) => {
           <TouchableOpacity
             onPress={() => {
               searchInput.current.clear();
-              setShowFilter(!showFilter);
+              if(showFilter === true) {
+                setShowFilter(!showFilter);
+              }
+              setSearchTerm("");
               Keyboard.dismiss();
             }}
             style={{
@@ -283,25 +312,81 @@ const HomeScreen = ({ navigation }) => {
             {showFilter ? (
               <MaterialIcons name="close" size={20} color={"#fff"} />
             ) : (
-              <Fontisto name="shopping-store" size={20} color={"#fff"} />
+              <Fontisto name="search" size={20} color={"#fff"} />
             )}
           </TouchableOpacity>
         </View>
-        {showFilter ? (
-          <View
+        {/* {showFilter ? (
+          <ScrollView
             style={{
               width: "100%",
-              height: "100%",
+              height: 'auto',
               backgroundColor: "transparent",
-              paddingLeft: 5,
+              padding: 20,
               display: "flex",
             }}
           >
-            <Carousel>
-              <Text>{searchTerm}</Text>
-            </Carousel>
-          </View>
-        ) : null}
+            <Text style={{ fontSize: 20, color: '#333', fontWeight: 'bold', marginBottom: 20, marginTop: '-5%' }}>Olha o que encontramos :)</Text>
+           {searchResults.map((commerce) => {
+             return(
+              <TouchableOpacity
+              style={{ marginBottom: 20 }}
+              onPress={() =>
+                navigation.navigate("Commerce", {
+                  name: commerce.name,
+                  rate: commerce.rate,
+                  location: commerce.location,
+                  time: commerce.time,
+                })
+              }
+            >
+              <Image
+                key={commerce.key}
+                source={commerce.image}
+                style={{
+                  borderTopLeftRadius: 10,
+                  borderTopRightRadius: 10,
+                  height: 100,
+                  width: "100%",
+                  marginRight: 10,
+                }}
+              />
+              <View
+                style={{
+                  width: "100%",
+                  padding: 10,
+                  height: "auto",
+                  justifyContent: "center",
+                  display: "flex",
+                  backgroundColor: "#333",
+                  borderBottomLeftRadius: 10,
+                  borderBottomRightRadius: 10,
+                }}
+              >
+                <Text style={{ color: "#fff", fontSize: 20 }}>
+                  {commerce.name}
+                </Text>
+                <View style={{ display: "flex", flexDirection: "row" }}>
+                  <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
+                  <Text
+                    style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
+                  >
+                    •
+                  </Text>
+                  <Text style={{ color: "#fff" }}>{commerce.location}</Text>
+                  <Text
+                    style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
+                  >
+                    •
+                  </Text>
+                  <Text style={{ color: "#fff" }}>{commerce.timing}</Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+             )
+           })}
+          </ScrollView>
+        ) : null} */}
         <View
           style={{
             justifyContent: "center",
@@ -359,128 +444,232 @@ const HomeScreen = ({ navigation }) => {
         </View>
       </View>
       <ScrollView>
-        <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
-          Compre por corredor
-        </Text>
-        <Carousel>
-          {categorias.map((categoria, index) => {
-            return (
-              <View key={index}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("Categoria", {
-                      categoria: categoria.name,
-                      mercados: categoria.mercados,
-                    })
-                  }
-                >
-                  <Image
-                    key={categoria.key}
-                    source={categoria.image}
-                    style={{
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                      height: 150,
-                      width: 200,
-                      marginRight: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: 200,
-                      padding: 10,
-                      height: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      display: "flex",
-                      backgroundColor: "#333",
-                      borderBottomLeftRadius: 10,
-                      borderBottomRightRadius: 10,
-                    }}
-                  >
-                    <Text style={{ color: "#fff" }}>{categoria.name}</Text>
+        {showFilter ? null : (
+          <>
+            <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
+              Os mais pedidos
+            </Text>
+            <Carousel>
+              {commerces.map((commerce, index) => {
+                return (
+                  <View key={index}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("Commerce", {
+                          name: commerce.name,
+                          rate: commerce.rate,
+                          location: commerce.location,
+                          timing: commerce.timing,
+                        })
+                      }
+                    >
+                      <Image
+                        key={commerce.key}
+                        source={commerce.image}
+                        style={{
+                          borderTopLeftRadius: 10,
+                          borderTopRightRadius: 10,
+                          height: 150,
+                          width: 200,
+                          marginRight: 10,
+                        }}
+                      />
+                      <View
+                        style={{
+                          width: 200,
+                          padding: 10,
+                          height: "auto",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          display: "flex",
+                          backgroundColor: "#333",
+                          borderBottomLeftRadius: 10,
+                          borderBottomRightRadius: 10,
+                        }}
+                      >
+                        <Text style={{ color: "#fff" }}>{commerce.name}</Text>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
-        </Carousel>
+                );
+              })}
+            </Carousel>
+          </>
+        )}
         <View>
-          <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
-            Compre por supermercados
-          </Text>
-          {commerces.map((commerce, index) => {
-            return (
-              <View key={index} style={{ padding: 20 }}>
-                <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate("Commerce", {
-                      name: commerce.name,
-                      rate: commerce.rate,
-                      location: commerce.location,
-                      time: commerce.time,
-                    })
-                  }
-                >
-                  <Image
-                    key={commerce.key}
-                    source={commerce.image}
-                    style={{
-                      borderTopLeftRadius: 10,
-                      borderTopRightRadius: 10,
-                      height: 100,
-                      width: "100%",
-                      marginRight: 10,
-                    }}
-                  />
-                  <View
-                    style={{
-                      width: "100%",
-                      padding: 10,
-                      height: "auto",
-                      justifyContent: "center",
-                      display: "flex",
-                      backgroundColor: "#333",
-                      borderBottomLeftRadius: 10,
-                      borderBottomRightRadius: 10,
-                    }}
-                  >
-                    <Text style={{ color: "#fff", fontSize: 20 }}>
-                      {commerce.name}
-                    </Text>
-                    <View style={{ display: "flex", flexDirection: "row" }}>
-                      <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
-                      <Text
-                        style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
+          {showFilter ? (
+            <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
+              Olha o que encontramos =)
+            </Text>
+          ) : (
+            <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
+              Mercados pertos de você
+            </Text>
+          )}
+          {searchTerm ? (
+            <>
+              {searchResults.map((commerce, index) => {
+                return (
+                  <View key={index} style={{ padding: 20 }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("Commerce", {
+                          name: commerce.name,
+                          rate: commerce.rate,
+                          location: commerce.location,
+                          time: commerce.time,
+                        })
+                      }
+                    >
+                      <Image
+                        key={commerce.key}
+                        source={commerce.image}
+                        style={{
+                          borderTopLeftRadius: 10,
+                          borderTopRightRadius: 10,
+                          height: 100,
+                          width: "100%",
+                          marginRight: 10,
+                        }}
+                      />
+                      <View
+                        style={{
+                          width: "100%",
+                          padding: 10,
+                          height: "auto",
+                          justifyContent: "center",
+                          display: "flex",
+                          backgroundColor: "#333",
+                          borderBottomLeftRadius: 10,
+                          borderBottomRightRadius: 10,
+                        }}
                       >
-                        •
-                      </Text>
-                      <Text style={{ color: "#fff" }}>{commerce.location}</Text>
-                      <Text
-                        style={{ color: "#fff", marginLeft: 5, marginRight: 5 }}
-                      >
-                        •
-                      </Text>
-                      <Text style={{ color: "#fff" }}>{commerce.timing}</Text>
-                    </View>
+                        <Text style={{ color: "#fff", fontSize: 20 }}>
+                          {commerce.name}
+                        </Text>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
+                          <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
+                          <Text
+                            style={{
+                              color: "#fff",
+                              marginLeft: 5,
+                              marginRight: 5,
+                            }}
+                          >
+                            •
+                          </Text>
+                          <Text style={{ color: "#fff" }}>
+                            {commerce.location}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#fff",
+                              marginLeft: 5,
+                              marginRight: 5,
+                            }}
+                          >
+                            •
+                          </Text>
+                          <Text style={{ color: "#fff" }}>
+                            {commerce.timing}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              </View>
-            );
-          })}
+                );
+              })}
+            </>
+          ) : null}
+
+          {!searchTerm ? (
+            <>
+              {commerces.map((commerce, index) => {
+                return (
+                  <View key={index} style={{ padding: 20 }}>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate("Commerce", {
+                          name: commerce.name,
+                          rate: commerce.rate,
+                          location: commerce.location,
+                          time: commerce.time,
+                        })
+                      }
+                    >
+                      <Image
+                        key={commerce.key}
+                        source={commerce.image}
+                        style={{
+                          borderTopLeftRadius: 10,
+                          borderTopRightRadius: 10,
+                          height: 100,
+                          width: "100%",
+                          marginRight: 10,
+                        }}
+                      />
+                      <View
+                        style={{
+                          width: "100%",
+                          padding: 10,
+                          height: "auto",
+                          justifyContent: "center",
+                          display: "flex",
+                          backgroundColor: "#333",
+                          borderBottomLeftRadius: 10,
+                          borderBottomRightRadius: 10,
+                        }}
+                      >
+                        <Text style={{ color: "#fff", fontSize: 20 }}>
+                          {commerce.name}
+                        </Text>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
+                          <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
+                          <Text
+                            style={{
+                              color: "#fff",
+                              marginLeft: 5,
+                              marginRight: 5,
+                            }}
+                          >
+                            •
+                          </Text>
+                          <Text style={{ color: "#fff" }}>
+                            {commerce.location}
+                          </Text>
+                          <Text
+                            style={{
+                              color: "#fff",
+                              marginLeft: 5,
+                              marginRight: 5,
+                            }}
+                          >
+                            •
+                          </Text>
+                          <Text style={{ color: "#fff" }}>
+                            {commerce.timing}
+                          </Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                );
+              })}
+            </>
+          ) : null}
         </View>
         <View style={{ height: 150, alignItems: "center" }} />
       </ScrollView>
       <Carrinho
-          ref={(el) => {
-            modal[0] = el;
-          }}
-        />
-        <Entrega
-          ref={(el) => {
-            modal[1] = el;
-          }}
-        />
+        ref={(el) => {
+          modal[0] = el;
+        }}
+      />
+      <Entrega
+        ref={(el) => {
+          modal[1] = el;
+        }}
+      />
     </SafeAreaView>
   );
 };
