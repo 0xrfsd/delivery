@@ -13,8 +13,6 @@ import {
   Dimensions,
 } from "react-native";
 
-import CachedImage from 'react-native-expo-cached-image';
-
 import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 
 import { Carousel } from "./Carousel";
@@ -28,10 +26,10 @@ const CommerceScreen = ({ navigation, route }) => {
   const { name } = route.params;
 
   const [counter, setCounter] = React.useState(0);
+  const [showFilter, setShowFilter] = React.useState(false);
 
   const [showCart, setShowCart] = React.useState(false);
   const [showEntrega, setShowEntrega] = React.useState(false);
-  const [showFilter, setShowFilter] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
 
@@ -156,7 +154,7 @@ const CommerceScreen = ({ navigation, route }) => {
           >
             <FontAwesome5 name="arrow-left" size={24} color="black" />
           </TouchableOpacity>
-          <CachedImage
+          <Image
             resizeMode={"contain"}
             style={{
               marginLeft: "10%",

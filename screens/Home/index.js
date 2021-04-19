@@ -12,7 +12,6 @@ import {
   Keyboard,
 } from "react-native";
 
-import CachedImage from 'react-native-expo-cached-image';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
 
@@ -41,8 +40,10 @@ const HomeScreen = ({ navigation }) => {
   const [userNome, setUserNome] = React.useState("");
   const [userId, setUserId] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
+
   const [showFilter, setShowFilter] = React.useState(false);
 
+  const [counter, setCounter] = React.useState(0);
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
@@ -241,7 +242,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView>
       <View>
-        <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
+        <View style={{ marginTop: 20, display: "flex", flexDirection: "row" }}>
           <TextInput
             onChangeText={(e) => {
               setShowFilter(true);
@@ -349,7 +350,7 @@ const HomeScreen = ({ navigation }) => {
                 <FontAwesome5
                   name="clock"
                   size={15}
-                  style={{ marginLeft: 5, marginTop: 0 }}
+                  style={{ marginLeft: 5, marginTop: 2 }}
                   color={"#333"}
                 />
               </View>
@@ -373,7 +374,7 @@ const HomeScreen = ({ navigation }) => {
                     })
                   }
                 >
-                  <CachedImage 
+                  <Image
                     key={categoria.key}
                     source={categoria.image}
                     style={{
@@ -421,7 +422,7 @@ const HomeScreen = ({ navigation }) => {
                     })
                   }
                 >
-                  <CachedImage 
+                  <Image
                     key={commerce.key}
                     source={commerce.image}
                     style={{
@@ -470,6 +471,11 @@ const HomeScreen = ({ navigation }) => {
         </View>
         <View style={{ height: 150, alignItems: "center" }} />
       </ScrollView>
+      <Carrinho
+          ref={(el) => {
+            modal[0] = el;
+          }}
+        />
         <Entrega
           ref={(el) => {
             modal[1] = el;
