@@ -128,7 +128,14 @@ const HomeScreen = ({ navigation }) => {
 
   React.useEffect(() => {
     getToken();
+    clearSearch();
   }, []);
+
+  const clearSearch = () => {
+    if(searchTerm === "") {
+      setShowFilter(false);
+    }
+  }
 
   const commerces = [
     {

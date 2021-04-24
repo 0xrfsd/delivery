@@ -150,6 +150,40 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/logingoogle", async (req, res) => {
+  const email = req.body.email;
+  const nome = req.body.nome;
+  const id = req.body.id;
+  const photoUrl = req.body.photoUrl;
+  const tipo = "consumer";
+
+  if (email.length == 0) {
+    return res.json({ status: "error", error: "Email cannot be null" });
+  }
+
+  if (nome.length == 0) {
+    return res.json({ status: "error", error: "Nome cannot be null" });
+  }
+
+  if (id.length == 0) {
+    return res.json({ status: "error", error: "Id cannot be null" });
+  }
+
+  const token = jwt.sign(
+    {
+      id: id,
+      nome: nome,
+      email: email,
+      photoUrl: photoUrl,
+      tipo: tipo,
+    },
+    JWT_SECRET
+  );
+
+  return res.json({ status: "ok", data: token });
+
+})
+
 app.post("/order", async (req, res) => {
   const userId = req.body.userId;
   const commerceId = req.body.commerceId;

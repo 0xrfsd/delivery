@@ -26,7 +26,7 @@ const RegisterScreen = () => {
   const register = async () => {
 
     await axios
-      .post("http://192.168.0.85:3000/register", {
+      .post("http://192.168.1.104:3000/register", {
         nome: nomeReq,
         email: emailReq,
         senha: senhaReq,

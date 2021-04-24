@@ -6,6 +6,7 @@ import {
   View,
   Text,
   Image,
+  ImageBackground,
   Button,
   TouchableOpacity,
   Dimensions,
@@ -52,19 +53,24 @@ const IntroScreen = ({ navigation }) => {
     setShowIntro(false);
   };
 
-  const _renderNextButton = () => {
+  _renderNextButton = () => {
     return (
-      <Text style={{ color: "#333", textAlign: "center", fontWeight: "bold" }}>
-        Próximo
-      </Text>
+      <View style={styles.buttonCircle}>
+        <Text style={{ color: "#fff" }}>Proximo</Text>
+      </View>
     );
   };
-
-  const _renderSkipButton = () => {
+  _renderDoneButton = () => {
     return (
-      <Text style={{ color: "#333", textAlign: "center", fontWeight: "bold" }}>
-        Pular
-      </Text>
+      <TouchableOpacity
+        onPress={() => {
+          storeIntroShow(false);
+          setShowIntro(false);
+        }}
+        style={styles.buttonCircle}
+      >
+        <Text style={{ color: "#fff" }}>Pronto!</Text>
+      </TouchableOpacity>
     );
   };
 
@@ -125,21 +131,34 @@ const IntroScreen = ({ navigation }) => {
     const windowHeight = Dimensions.get("window").height;
 
     return (
-      <View
+      <ImageBackground
+        opacity={0.5}
+        source={item.image}
         style={{
-          height: windowHeight,
-          backgroundColor: item.backgroundColor,
-          alignItems: "center",
-          justifyContent: "center",
-          paddingBottom: 100,
+          width: windowWidth,
+          flex: 1,
+          backgroundColor: "#333",
+          padding: 20,
+          paddingBottom: "15%",
+          display: "flex",
         }}
       >
-        <Text style={styles.introTitleStyle}>{item.title}</Text>
-        <Image style={styles.introImageStyle} source={item.image} />
-        <Text style={styles.introTextStyle}>{item.text}</Text>
-        {item.key == "s5" ? <Driver /> : null}
-        {item.key == "s6" ? <Btn /> : null}
-      </View>
+                  <Text
+            style={{
+              color: "#fff",
+              display: "flex",
+              marginTop: "5%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginBottom: 10,
+              fontSize: 32,
+            }}
+          >
+            Entrega <Text style={{ fontWeight: "bold" }}>+</Text>
+          </Text>
+        <Text style={{ fontSize: 26, color: '#fff',  marginTop: '100%', fontWeight: 'bold' }}>{item.title}</Text>
+        <Text style={{ fontSize: 20, color: '#fff',  textAlign: 'left', marginBottom: '20%' }}>{item.text}</Text>
+      </ImageBackground>
     );
   };
 
@@ -153,35 +172,70 @@ const IntroScreen = ({ navigation }) => {
           activeDotStyle={{ width: 30, backgroundColor: "#fff" }}
           data={slides}
           renderItem={RenderItem}
-          showDoneButton={false}
-          showSkipButton={true}
+          showDoneButton={true}
+          showSkipButton={false}
           showNextButton={true}
           onSkip={onSkip}
+          bottomButton={true}
           renderNextButton={_renderNextButton}
-          renderSkipButton={_renderSkipButton}
+          renderDoneButton={_renderDoneButton}
         />
       ) : (
-        <View
+        <ImageBackground
+          opacity={0.5}
+          source={{
+            uri:
+              "https://images.pexels.com/photos/3962285/pexels-photo-3962285.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
+          }}
           style={{
             width: windowWidth,
-            height: windowHeight,
+            flex: 1,
             backgroundColor: "#333",
-            alignItems: "center",
-            justifyContent: "center",
-            paddingBottom: 100,
+            padding: 20,
+            paddingBottom: "15%",
+            display: "flex",
           }}
         >
-          <Text style={styles.introTitleStyle}>Entrega+</Text>
-          {/* <Image style={styles.introImageStyle} source={item.image} /> */}
-          <Text style={styles.introTextStyle}>
-            O Aplicativo que conecta você à tudo que precisa comprar!
+          <Text
+            style={{
+              color: "#fff",
+              display: "flex",
+              marginTop: "5%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              marginBottom: 10,
+              fontSize: 32,
+            }}
+          >
+            Entrega <Text style={{ fontWeight: "bold" }}>+</Text>
           </Text>
-          <Text style={styles.introTextStyle}></Text>
+          <Text
+            style={{
+              color: "#fff",
+              display: "flex",
+              marginTop: "auto",
+              marginBottom: 10,
+              fontSize: 26,
+            }}
+          >
+            O<Text style={{ fontWeight: "bold" }}> futuro da entrega </Text>
+            chegou ao Brasil. Comece a pedir agora mesmo!
+          </Text>
+          <Text
+            style={{
+              color: "#fff",
+              display: "flex",
+              marginBottom: 20,
+              fontSize: 14,
+            }}
+          >
+            Conheça nossas opções
+          </Text>
+          {/* <Image style={styles.introImageStyle} source={item.image} /> */}
+
           <TouchableOpacity
             style={{
-              width: "90%",
-              marginLeft: "5%",
-              marginRight: "5%",
+              width: "100%",
               height: 50,
               backgroundColor: "#fff",
               justifyContent: "center",
@@ -189,18 +243,17 @@ const IntroScreen = ({ navigation }) => {
               borderRadius: 5,
             }}
             onPress={() => {
-              navigation.navigate('Register')
+              navigation.navigate("Register");
             }}
           >
             <Text style={{ color: "#333" }}>
-              Ainda não possui uma conta? <Text style={{ fontWeight: 'bold' }}>Crie agora!</Text>
+              Ainda não possui uma conta?{" "}
+              <Text style={{ fontWeight: "bold" }}>Crie agora!</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: "90%",
-              marginLeft: "5%",
-              marginRight: "5%",
+              width: "100%",
               marginTop: 5,
               height: 50,
               backgroundColor: "#fff",
@@ -209,18 +262,17 @@ const IntroScreen = ({ navigation }) => {
               borderRadius: 5,
             }}
             onPress={() => {
-              navigation.navigate('Login')
+              navigation.navigate("Login");
             }}
           >
             <Text style={{ color: "#333" }}>
-              Já possui uma conta? <Text style={{ fontWeight: 'bold' }}>Entre agora!</Text>
+              Já possui uma conta?{" "}
+              <Text style={{ fontWeight: "bold" }}>Peça agora!</Text>
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={{
-              width: "90%",
-              marginLeft: "5%",
-              marginRight: "5%",
+              width: "100%",
               marginTop: 5,
               height: 50,
               backgroundColor: "#fff",
@@ -234,10 +286,11 @@ const IntroScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ fontWeight: "bold", color: "#333" }}>
-              Introdução
+              {" "}
+              Faça parte do nosso time de entrega
             </Text>
           </TouchableOpacity>
-        </View>
+        </ImageBackground>
       )}
     </>
   );
@@ -268,6 +321,8 @@ const styles = StyleSheet.create({
     height: 200,
   },
   introTextStyle: {
+    marginTop: "auto",
+    display: "flex",
     width: "50%",
     fontSize: 18,
     color: "white",
@@ -275,74 +330,82 @@ const styles = StyleSheet.create({
     paddingVertical: 30,
   },
   introTitleStyle: {
-    marginTop: "15%",
-    width: "70%",
-    fontSize: 25,
+    marginTop: "auto",
+    width: "40%",
+    fontSize: 35,
     color: "white",
-    textAlign: "center",
-    marginBottom: 16,
+    textAlign: "left",
     fontWeight: "bold",
+  },
+  buttonCircle: {
+    width: "100%",
+    marginTop: 10,
+    height: 50,
+    backgroundColor: "rgba(0, 0, 0, .5)",
+    borderRadius: 5,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
 const slides = [
   {
     key: "s1",
-    title: "Faça suas Compras de Casa",
-    text: "É Rápido, Facil e Chega na Porta da sua Casa!",
+    title: "Entrega rápida e segura, peça na sua casa!",
+    text: "Padrão de segurança pra quem lida com cartão de crédito.",
     image: {
       uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_mobile_recharge.png",
-    },
-    backgroundColor: "#20d2bb",
-  },
-  {
-    key: "s2",
-    title: "Entrega Rápida e Segura",
-    text: "Seus Pedidos Chegam em no Maximo 1 hora!",
-    image: {
-      uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_flight_ticket_booking.png",
+        "https://images.pexels.com/photos/4391479/pexels-photo-4391479.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     },
     backgroundColor: "#febe29",
   },
   {
-    key: "s3",
-    title: "Cupons de Desconto e muito mais",
-    text: "Promoções, Descontos e Cupoms Exclusivos!",
+    key: "s2",
+    title: "Cupons de desconto e muito mais!",
+    text: "Promoções, Descontos e Cupoms Exclusivos.",
     image: {
       uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_discount.png",
+        "https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     },
     backgroundColor: "#22bcb5",
   },
   {
-    key: "s4",
-    title: "Peça Tudo o Que Você Precisa",
-    text: "Láticineos, Hortifrute, Padaria até Açougue!",
+    key: "s3",
+    title: "Faça suas compras sem sair de casa!",
+    text: "É Rápido, Facil e Chega na porta da sua Casa.",
     image: {
       uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_best_deals.png",
+        "https://images.pexels.com/photos/4350099/pexels-photo-4350099.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+    },
+    backgroundColor: "#20d2bb",
+  },
+  {
+    key: "s4",
+    title: "Peça tudo o que você precisa!",
+    text: "Láticineos, Hortifrute, Padaria até Açougue.",
+    image: {
+      uri:
+        "https://images.pexels.com/photos/3218467/pexels-photo-3218467.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
     },
     backgroundColor: "#3395ff",
   },
   {
     key: "s5",
-    title: "Oportunidade de Emprego",
-    text: "Trabalhe conosco, Seja nosso parceiro.",
+    title: "Faça parte da nova geração de entrega!",
+    text: "Junte-se ao nosso time de entrega hoje mesmo e cresça conosco.",
     image: {
       uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_bus_ticket_booking.png",
+        "https://images.pexels.com/photos/4393668/pexels-photo-4393668.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     },
     backgroundColor: "#f6437b",
   },
   {
     key: "s6",
-    title: "Comece a pedir hoje mesmo!",
-    text: " Simples, Rápido e Seguro.",
+    title: "Um novo conceito de delivery te espera!",
+    text: "Clique no botão para começar a pedir hoje mesmo.",
     image: {
       uri:
-        "https://raw.githubusercontent.com/AboutReact/sampleresource/master/intro_train_ticket_booking.png",
+        "https://images.pexels.com/photos/6567350/pexels-photo-6567350.jpeg?auto=compress&cs=tinysrgb&h=650&w=940",
     },
     backgroundColor: "#febe29",
   },

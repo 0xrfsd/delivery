@@ -87,7 +87,7 @@ const s = StyleSheet.create({
   content: {
     height: 'auto',
     padding: 20,
-    marginBottom: 120
+    marginBottom: 130
   },
 
   content__icon: {

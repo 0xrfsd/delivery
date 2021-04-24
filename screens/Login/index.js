@@ -7,8 +7,52 @@ import axios from "axios";
 
 import storeToken from "../../storeToken";
 
+import * as Google from 'expo-google-app-auth';
+
+import { useNavigation } from '@react-navigation/native';
+
 const LoginScreen = () => {
-  <storeToken />;
+  
+  const navigation = useNavigation();
+
+  <storeToken />
+
+  const signInWithGoogle = async () => {
+    try {
+      const result = await Google.logInAsync({
+        iosClientId:
+          "382490770664-2omdh7rb4jt6ch9346aluoho1po475ut.apps.googleusercontent.com",
+        androidClientId:
+          "382490770664-ls428icid88tjf5bimgbvpit3v1ocobm.apps.googleusercontent.com",
+        success: ["profile", "email"],
+      });
+      if (result.type === "success") {
+        await axios
+        .post("http://192.168.1.104:3000/logingoogle", {
+          id: result.user.id,
+          email: result.user.email,
+          photoUrl: result.user.photoUrl,
+          nome: result.user.name,
+        })
+        .then((response) => {
+          if (response.status == 200) {
+            if (response.data.status === "ok") {
+              storeToken(response.data.data).then(() => setIsAuth(true));
+            } else {
+              setError(response.data.error);
+            }
+          }
+        });
+        return result.acessToken;
+      } else {
+        return { cancelled: true };
+      }
+    } catch (e) {
+      console.log("Login", e);
+      return { error: true };
+    }
+  };
+
 
   const { isAuth, setIsAuth } = React.useContext(AuthContext);
 
@@ -21,7 +65,7 @@ const LoginScreen = () => {
 
   const login = async () => {
     await axios
-      .post("http://192.168.0.85:3000/login", {
+      .post("http://192.168.1.104:3000/login", {
         email: email,
         senha: senha,
       })
@@ -116,7 +160,7 @@ const LoginScreen = () => {
             borderRadius: 10,
             color: "#333",
           }}
-          onPress={login}
+          onPress={signInWithGoogle}
         >
           <View
             style={{
