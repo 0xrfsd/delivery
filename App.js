@@ -11,6 +11,7 @@ import {
   StatusBar,
   Platform,
 } from "react-native";
+
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
@@ -55,6 +56,14 @@ const App = () => {
   const [userTipo, setUserTipo] = React.useState("");
   const [loading, setLoading] = React.useState(true);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+    getToken();
+    getData();
+  }, []);
+
   const getToken = async () => {
     try {
       const value = await AsyncStorage.getItem("@token");
@@ -91,19 +100,19 @@ const App = () => {
 
   const Loading = () => {
     return (
-      <View style={{ height: "100%", width: "100%", backgroundColor: "#333", justifyContent: "center", alignItems: "center"}}>
+      <View
+        style={{
+          height: "100%",
+          width: "100%",
+          backgroundColor: "#333",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text style={{ color: "#fff", fontWeight: "bold" }}>Entrega +</Text>
       </View>
     );
   };
-
-  React.useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
-    getToken();
-    getData();
-  }, []);
 
   const [isAuth, setIsAuth] = React.useState(null);
 

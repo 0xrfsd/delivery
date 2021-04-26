@@ -74,58 +74,6 @@ const IntroScreen = ({ navigation }) => {
     );
   };
 
-  const Btn = () => {
-    return (
-      <>
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            marginLeft: "5%",
-            marginRight: "5%",
-            height: 50,
-            backgroundColor: "#333",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-          }}
-          onPress={() => {
-            storeIntroShow(false);
-            setShowIntro(false);
-          }}
-        >
-          <Text style={{ fontWeight: "bold", color: "#fff" }}>
-            Você está pronto pra começar a pedir!
-          </Text>
-        </TouchableOpacity>
-      </>
-    );
-  };
-
-  const Driver = () => {
-    return (
-      <>
-        <TouchableOpacity
-          style={{
-            width: "90%",
-            marginLeft: "5%",
-            marginRight: "5%",
-            height: 50,
-            backgroundColor: "#333",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 5,
-          }}
-          onPress={() => navigation.navigate("Register")}
-        >
-          <Text style={{ color: "#fff" }}>
-            Seja um e-driver!
-            <Text style={{ fontWeight: "bold" }}> Ganhe uma $$$ extra!</Text>
-          </Text>
-        </TouchableOpacity>
-      </>
-    );
-  };
-
   const RenderItem = ({ item }) => {
     const windowWidth = Dimensions.get("window").width;
     const windowHeight = Dimensions.get("window").height;
@@ -143,21 +91,39 @@ const IntroScreen = ({ navigation }) => {
           display: "flex",
         }}
       >
-                  <Text
-            style={{
-              color: "#fff",
-              display: "flex",
-              marginTop: "5%",
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginBottom: 10,
-              fontSize: 32,
-            }}
-          >
-            Entrega <Text style={{ fontWeight: "bold" }}>+</Text>
-          </Text>
-        <Text style={{ fontSize: 26, color: '#fff',  marginTop: '100%', fontWeight: 'bold' }}>{item.title}</Text>
-        <Text style={{ fontSize: 20, color: '#fff',  textAlign: 'left', marginBottom: '20%' }}>{item.text}</Text>
+        <Text
+          style={{
+            color: "#fff",
+            display: "flex",
+            marginTop: "5%",
+            marginLeft: "auto",
+            marginRight: "auto",
+            marginBottom: 10,
+            fontSize: 32,
+          }}
+        >
+          Entrega <Text style={{ fontWeight: "bold" }}>+</Text>
+        </Text>
+        <Text
+          style={{
+            fontSize: 26,
+            color: "#fff",
+            marginTop: "100%",
+            fontWeight: "bold",
+          }}
+        >
+          {item.title}
+        </Text>
+        <Text
+          style={{
+            fontSize: 20,
+            color: "#fff",
+            textAlign: "left",
+            marginBottom: "20%",
+          }}
+        >
+          {item.text}
+        </Text>
       </ImageBackground>
     );
   };
