@@ -15,8 +15,13 @@ import {
 import AppIntroSlider from "react-native-app-intro-slider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { LoginModal } from "../../components/modals/LoginModal";
+import { RegisterModal } from "../../components/modals/RegisterModal";
+
 const IntroScreen = ({ navigation }) => {
   const [showIntro, setShowIntro] = useState(true);
+  const [modal, setModal] = React.useState([])
+  const [loginOpened, setLoginOpened] = React.useState(false);
 
   const storeIntroShow = async (value) => {
     const json = JSON.stringify(value);
@@ -175,11 +180,11 @@ const IntroScreen = ({ navigation }) => {
           >
             Entrega <Text style={{ fontWeight: "bold" }}>+</Text>
           </Text>
-          <Text
+            <View style={{ display: 'flex', flexDirection: 'column', marginTop: '65%' }}>
+            <Text
             style={{
               color: "#fff",
               display: "flex",
-              marginTop: "auto",
               marginBottom: 10,
               fontSize: 26,
             }}
@@ -197,8 +202,6 @@ const IntroScreen = ({ navigation }) => {
           >
             Conheça nossas opções
           </Text>
-          {/* <Image style={styles.introImageStyle} source={item.image} /> */}
-
           <TouchableOpacity
             style={{
               width: "100%",
@@ -209,7 +212,7 @@ const IntroScreen = ({ navigation }) => {
               borderRadius: 5,
             }}
             onPress={() => {
-              navigation.navigate("Register");
+              modal[1].openModal();
             }}
           >
             <Text style={{ color: "#333" }}>
@@ -228,7 +231,7 @@ const IntroScreen = ({ navigation }) => {
               borderRadius: 5,
             }}
             onPress={() => {
-              navigation.navigate("Login");
+              modal[0].openModal();
             }}
           >
             <Text style={{ color: "#333" }}>
@@ -256,6 +259,9 @@ const IntroScreen = ({ navigation }) => {
               Faça parte do nosso time de entrega
             </Text>
           </TouchableOpacity>
+            </View>
+            <LoginModal modal={modal} setModal={setModal} modalIndex={0} />
+            <RegisterModal modal={modal} setModal={setModal} modalIndex={1} />
         </ImageBackground>
       )}
     </>

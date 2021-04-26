@@ -18,6 +18,7 @@ import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 import { Carousel } from "./Carousel";
 
 import { Carrinho } from "../../components/modals/Carrinho";
+import { SnappingList } from '../../components/modals/SnappingList';
 import { Entrega } from "../../components/modals/Entrega";
 
 import ImageCardOne from "../../assets/carrefour.png";
@@ -34,6 +35,8 @@ const CommerceScreen = ({ navigation, route }) => {
   const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
+
+  const [modal, setModal] = React.useState([])
 
   React.useEffect(() => {
   }, [])
@@ -114,8 +117,6 @@ const CommerceScreen = ({ navigation, route }) => {
 
   const WIDTH = Dimensions.get("window").width;
   const numColumns = 2;
-
-  const modal = [];
 
   const renderCarrinho = () => {
     return (
@@ -289,11 +290,11 @@ const CommerceScreen = ({ navigation, route }) => {
         numColumns={numColumns}
       />
     </SafeAreaView>
-          <Carrinho
-          ref={(el) => {
-            modal[0] = el;
-          }}
-        />
+    <SnappingList
+        modal={modal}
+        setModal={setModal}
+        modalIndex={0}
+      />
         </>
   );
 };

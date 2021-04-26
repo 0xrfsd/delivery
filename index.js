@@ -46,15 +46,15 @@ app.post("/register", async (req, res) => {
   const exists = await User.findOne({ email }).lean();
 
   if (tipo.length == 0) {
-    return res.json({ status: "error", error: "Your tipo cannot be null" });
+    return res.json({ status: "error", error: "Seu tipo precisa ser definido" });
   }
 
   if (nome.length == 0) {
-    return res.json({ status: "error", error: "Your name cannot be null" });
+    return res.json({ status: "error", error: "Você precisa digitar seu nome" });
   }
 
   if (email.length == 0) {
-    return res.json({ status: "error", error: "Your email cannot be null" });
+    return res.json({ status: "error", error: "Você precisa digitar seu email" });
   }
 
   if (exists) {
@@ -67,7 +67,7 @@ app.post("/register", async (req, res) => {
   if (psenha.length < 8) {
     return res.json({
       status: "error",
-      error: "Your senha must contain at least 8 characters",
+      error: "Sua senha precisa ter no minimo 8 digitos",
     });
   }
 
@@ -122,15 +122,15 @@ app.post("/login", async (req, res) => {
   const user = await User.findOne({ email }).lean();
 
   if (email.length == 0) {
-    return res.json({ status: "error", error: "Your email cannot be null" });
+    return res.json({ status: "error", error: "Qual é o seu email?" });
   }
 
   if (!user) {
-    return res.json({ status: "error", error: "This email does not exist" });
+    return res.json({ status: "error", error: "Email invalido" });
   }
 
   if (senha.length == 0) {
-    return res.json({ status: "error", error: "Your password cannot be null" });
+    return res.json({ status: "error", error: "Qual é a sua senha?" });
   }
 
   if (await bcrypt.compare(senha, user.senha)) {
@@ -146,7 +146,7 @@ app.post("/login", async (req, res) => {
 
     return res.json({ status: "ok", data: token });
   } else {
-    return res.json({ status: "error", error: "Invalid password" });
+    return res.json({ status: "error", error: "Sua senha está errada!" });
   }
 });
 
@@ -273,31 +273,3 @@ app.post("/commerce", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
 });
-
-// const express = require('express');
-// const mongoose = require('mongoose');
-
-// const user = 'ricardo'
-// const password = 'Azd202020'
-// const database = 'startup'
-// const server = `mongodb+srv://${user}:${password}@cluster0.94tuo.mongodb.net/${database}?retryWrites=true&w=majority`
-// const config = { useNewUrlParser: true, useUnifiedTopology: true }
-
-// mongoose.connect(server, config).then(() => {
-//     console.log('Database connection succesfully!')
-// })
-
-// const production = express();
-// const development = express();
-
-// const PORT = 3000;
-
-// development.get('/', function(req, res) {
-//     res.send('Hello World!');
-// })
-
-// production.use('/dev', development);
-
-// production.listen(PORT, () => {
-//     console.log(`Server running on PORT: ${PORT}`);
-// })
