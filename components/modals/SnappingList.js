@@ -23,7 +23,7 @@ export function SnappingList(props) {
   // alert(windowHeight);
 
   const [opened, setOpened] = useState(false);
-  const [cart, setCart] = useState([]);
+  const [cart, setCart] = useState(["",'','','','']);
   const [payment, setPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -194,7 +194,7 @@ export function SnappingList(props) {
                   }}
                 >
                   <Text
-                    style={{ fontSize: 15, fontWeight: "bold", marginLeft: 1 }}
+                    style={{ fontSize: 15, fontWeight: "bold" }}
                   >
                     +
                   </Text>
@@ -508,7 +508,7 @@ export function SnappingList(props) {
               <>
                 {cart.length > 0 ? (
                   <ScrollView style={s.content}>
-                    {Array(0)
+                    {Array(5)
                       .fill(0)
                       .map((_, i) => (
                         <TouchableOpacity

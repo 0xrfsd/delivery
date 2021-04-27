@@ -146,7 +146,7 @@ export function RegisterModal(props) {
   const renderContent = useCallback(() => {
     return (
       <>
-        <View style={{ marginTop: '-5%' }}>
+        <View style={{ marginTop: '-4%' }}>
           <TextInput
             onFocus={() => {
               setKeyboardAvoid(true);
@@ -328,6 +328,7 @@ export function RegisterModal(props) {
         ref={modalizeRef}
         onOpened={() => handlerStateChange(true)}
         onClosed={() => {
+          setError('');
           setKeyboardAvoid(false);
           handlerStateChange(false);
         }}
