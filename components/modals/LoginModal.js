@@ -236,7 +236,7 @@ export function LoginModal(props) {
                       Enviar email de recuperação
                       <Text style={{ fontWeight: "bold", color: "#333" }}>
                         {" "}
-                        {esqueceuEnviado ? "60" : null}
+                        {esqueceuEnviado ? 60 : null}
                       </Text>
                     </Text>
                   </View>
@@ -265,6 +265,7 @@ export function LoginModal(props) {
                     onBlur={() => {
                       setKeyboardAvoid(false);
                     }}
+                    keyboardType="email-address"
                     ref={emailTextInput}
                     autoCorrect={false}
                     style={{
@@ -300,7 +301,7 @@ export function LoginModal(props) {
                     setKeyboardAvoid(false);
                     // validar no server se email existe
                     setEsqueceuEnviado(true);
-                    setError('');
+                    setError("");
                     // setError("Insira um email inválido");
                   }}
                 >
@@ -432,7 +433,7 @@ export function LoginModal(props) {
               {error ? <Text style={{ color: "red" }}>{error}</Text> : null}
               <TouchableOpacity
                 onPress={() => {
-                  setError('');
+                  setError("");
                   setKeyboardAvoid(false);
                   setEsqueceu(true);
                 }}
@@ -541,14 +542,14 @@ export function LoginModal(props) {
               : esqueceu
               ? keyboardAvoid
                 ? modalHeight - 20 + keyboardHeight
-                : modalHeight - 20 + 10 
+                : modalHeight - 20 + 10
               : keyboardAvoid
               ? modalHeight + keyboardHeight
               : modalHeight
             : email
             ? esqueceu
               ? keyboardAvoid
-                ? modalHeight - 20 - 50 + keyboardHeight 
+                ? modalHeight - 20 - 50 + keyboardHeight
                 : modalHeight - 30 - 50 + esqueceuMargin
               : keyboardAvoid
               ? modalHeight + keyboardHeight

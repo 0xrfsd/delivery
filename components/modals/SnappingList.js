@@ -14,16 +14,21 @@ import {
   Keyboard,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
+
+import { Entrega } from "./Entrega";
+
 // import { Button } from "../button/Button";
+
+import { FontAwesome5 } from "@expo/vector-icons";
 
 export function SnappingList(props) {
   const modalMargin = Platform.OS === "ios" ? 0 : 20;
   const paymentMargin = Platform.OS === "ios" ? 0 : 10;
 
-  // alert(windowHeight);
+  const modal = [];
 
   const [opened, setOpened] = useState(false);
-  const [cart, setCart] = useState(["",'','','','']);
+  const [cart, setCart] = useState(["", "", "", "", ""]);
   const [payment, setPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -193,11 +198,7 @@ export function SnappingList(props) {
                     borderRadius: 100,
                   }}
                 >
-                  <Text
-                    style={{ fontSize: 15, fontWeight: "bold" }}
-                  >
-                    +
-                  </Text>
+                  <Text style={{ fontSize: 15, fontWeight: "bold" }}>+</Text>
                 </TouchableOpacity>
               </View>
             ) : (
@@ -221,272 +222,448 @@ export function SnappingList(props) {
   const renderContent = useCallback(() => {
     return (
       <>
-        {loading ? (
-          <ActivityIndicator
-            size="large"
-            style={{ marginTop: 50 }}
-            color="#333"
-          />
-        ) : (
-          <View style={{}}>
-            {payment ? (
-              <View style={{ width: "100%" }}>
-                {addCard ? (
-                  <View
-                    style={{
-                      height: 255,
-                      width: "100%",
-                      paddingLeft: 20,
-                      paddingRight: 20,
-                    }}
-                  >
-                    <TextInput
-                      editable={true}
-                      style={{
-                        width: "100%",
-                        height: 45,
-                        borderBottomColor:
-                          cardHolderName.length > 0 ? "#3654d0" : "#f9f9f9",
-                        borderBottomWidth: 2,
-                      }}
-                      placeholder="Titular do cartão"
-                      autoCompleteType="cc-csc"
-                      keyboardType="default"
-                      onFocus={() => setKeyboardAvoid(true)}
-                      onChangeText={(e) => {
-                        setCardHolderName(e);
-                      }}
-                    />
-                    <TextInput
-                      style={{
-                        width: "100%",
-                        height: 45,
-                        borderBottomColor:
-                          cardNumber.length > 0 ? "#3654d0" : "#f9f9f9",
-                        borderBottomWidth: 2,
-                      }}
-                      placeholder="Numero do cartão (0000 0000 0000 0000)"
-                      autoCompleteType="cc-number"
-                      keyboardType="number-pad"
-                      maxLength={16}
-                      onFocus={() => setKeyboardAvoid(true)}
-                      onChangeText={(e) => {
-                        setCardNumber(e);
-                      }}
-                    />
+        <>
+          {loading ? (
+            <ActivityIndicator
+              size="large"
+              style={{ marginTop: 50 }}
+              color="#333"
+            />
+          ) : (
+            <View style={{}}>
+              {payment ? (
+                <View style={{ width: "100%" }}>
+                  {addCard ? (
                     <View
                       style={{
-                        justifyContent: "space-between",
-                        display: "flex",
-                        flexDirection: "row",
+                        height: 255,
+                        width: "100%",
+                        paddingLeft: 20,
+                        paddingRight: 20,
                       }}
                     >
                       <TextInput
+                        editable={true}
                         style={{
-                          width: "48%",
+                          width: "100%",
                           height: 45,
                           borderBottomColor:
-                            expDate.length > 0 ? "#3654d0" : "#f9f9f9",
+                            cardHolderName.length > 0 ? "#3654d0" : "#f9f9f9",
                           borderBottomWidth: 2,
                         }}
-                        placeholder="Validade (MM/AA)"
-                        autoCompleteType="cc-exp"
-                        keyboardType="number-pad"
-                        maxLength={4}
-                        onFocus={() => setKeyboardAvoid(true)}
-                        onChangeText={(e) => {
-                          setExpDate(e);
-                        }}
-                      />
-                      <TextInput
-                        style={{
-                          width: "48%",
-                          height: 45,
-                          borderBottomColor:
-                            cvc.length > 0 ? "#3654d0" : "#f9f9f9",
-                          borderBottomWidth: 2,
-                        }}
-                        placeholder="CVV (000)"
+                        placeholder="Titular do cartão"
                         autoCompleteType="cc-csc"
-                        keyboardType="number-pad"
-                        maxLength={3}
+                        keyboardType="default"
                         onFocus={() => setKeyboardAvoid(true)}
-                        onBlur={() => {
-                          Keyboard.dismiss();
-                          setKeyboardAvoid(false);
-                        }}
                         onChangeText={(e) => {
-                          setCvc(e);
+                          setCardHolderName(e);
                         }}
                       />
-                    </View>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setPayment(true);
-                      }}
-                      style={{
-                        width: "100%",
-                        marginTop: 25,
-                        backgroundColor: "#333",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: 5,
-                        height: 50,
-                      }}
-                    >
-                      <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                        Adicionar Cartão
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                ) : (
-                  <View style={{ height: 255 }}>
-                    <TouchableOpacity
-                      onPress={() => setSelected(!selected)}
-                      style={{
-                        height: 60,
-                        width: "100%",
-                        paddingVertical: 10,
-                        borderBottomColor: "#f9f9f9",
-                        borderBottomWidth: 1,
-                      }}
-                    >
+                      <TextInput
+                        style={{
+                          width: "100%",
+                          height: 45,
+                          borderBottomColor:
+                            cardNumber.length > 0 ? "#3654d0" : "#f9f9f9",
+                          borderBottomWidth: 2,
+                        }}
+                        placeholder="Numero do cartão (0000 0000 0000 0000)"
+                        autoCompleteType="cc-number"
+                        keyboardType="number-pad"
+                        maxLength={16}
+                        onFocus={() => setKeyboardAvoid(true)}
+                        onChangeText={(e) => {
+                          setCardNumber(e);
+                        }}
+                      />
                       <View
                         style={{
-                          paddingLeft: 20,
-                          paddingRight: 20,
+                          justifyContent: "space-between",
                           display: "flex",
                           flexDirection: "row",
                         }}
                       >
-                        <View style={s.content__avatar}>
-
-                        </View>
-
-                        <Text
+                        <TextInput
                           style={{
-                            marginTop: 10,
-                            marginBottom: 10,
-                            color: "#333",
-                            fontWeight: "bold",
+                            width: "48%",
+                            height: 45,
+                            borderBottomColor:
+                              expDate.length > 0 ? "#3654d0" : "#f9f9f9",
+                            borderBottomWidth: 2,
+                          }}
+                          placeholder="Validade (MM/AA)"
+                          autoCompleteType="cc-exp"
+                          keyboardType="number-pad"
+                          maxLength={4}
+                          onFocus={() => setKeyboardAvoid(true)}
+                          onChangeText={(e) => {
+                            setExpDate(e);
+                          }}
+                        />
+                        <TextInput
+                          style={{
+                            width: "48%",
+                            height: 45,
+                            borderBottomColor:
+                              cvc.length > 0 ? "#3654d0" : "#f9f9f9",
+                            borderBottomWidth: 2,
+                          }}
+                          placeholder="CVV (000)"
+                          autoCompleteType="cc-csc"
+                          keyboardType="number-pad"
+                          maxLength={3}
+                          onFocus={() => setKeyboardAvoid(true)}
+                          onBlur={() => {
+                            Keyboard.dismiss();
+                            setKeyboardAvoid(false);
+                          }}
+                          onChangeText={(e) => {
+                            setCvc(e);
+                          }}
+                        />
+                      </View>
+                      <TouchableOpacity
+                        onPress={() => {
+                          setPayment(true);
+                        }}
+                        style={{
+                          width: "100%",
+                          marginTop: 25,
+                          backgroundColor: "#333",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 5,
+                          height: 50,
+                        }}
+                      >
+                        <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                          Adicionar Cartão
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View style={{ height: 255 }}>
+                      <TouchableOpacity
+                        onPress={() => setSelected(!selected)}
+                        style={{
+                          height: 60,
+                          width: "100%",
+                          paddingVertical: 10,
+                          borderBottomColor: "#f9f9f9",
+                          borderBottomWidth: 1,
+                        }}
+                      >
+                        <View
+                          style={{
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            display: "flex",
+                            flexDirection: "row",
                           }}
                         >
-                          Mastercard *3154
-                        </Text>
-                        {selected ? (
+                          <View style={s.content__avatar}></View>
+
                           <Text
                             style={{
                               marginTop: 10,
                               marginBottom: 10,
                               color: "#333",
+                              fontWeight: "bold",
                             }}
                           >
-                            {" "}
-                            (Selecionado)
+                            Mastercard *3154
                           </Text>
-                        ) : null}
-                      </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => setAddCard(true)}
+                          {selected ? (
+                            <Text
+                              style={{
+                                marginTop: 10,
+                                marginBottom: 10,
+                                color: "#333",
+                              }}
+                            >
+                              {" "}
+                              (Selecionado)
+                            </Text>
+                          ) : null}
+                        </View>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => setAddCard(true)}
+                        style={{
+                          height: 60,
+                          width: "100%",
+                          paddingVertical: 10,
+                          borderBottomColor: "#f9f9f9",
+                          borderBottomWidth: 1,
+                        }}
+                      >
+                        <View
+                          style={{
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            display: "flex",
+                            flexDirection: "row",
+                          }}
+                        >
+                          <View
+                            style={{
+                              width: 38,
+                              height: 38,
+                              justifyContent: "center",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                marginTop: "-15%",
+                                fontSize: 33,
+                              }}
+                            >
+                              +
+                            </Text>
+                          </View>
+
+                          <Text
+                            style={{
+                              marginTop: 10,
+                              marginBottom: 10,
+                              color: "#333",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            Adicionar Cartão de Credito
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
+                      {cart.length > 0 ? (
+                        <View
+                          style={{
+                            width: "100%",
+                            height: "auto",
+                            paddingVertical: 10,
+                            paddingHorizontal: 20,
+                            display: "flex",
+                            flexDirection: "column",
+                          }}
+                        >
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ fontSize: 16 }}>
+                              Taxa de serviço
+                            </Text>
+                            <Text style={{ fontSize: 16 }}>R$5</Text>
+                          </View>
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ fontSize: 16 }}>
+                              Taxa de entrega
+                            </Text>
+                            <Text style={{ fontSize: 16 }}>R$10</Text>
+                          </View>
+                          <View
+                            style={{
+                              display: "flex",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                              Total
+                            </Text>
+                            <Text style={{ fontSize: 16 }}>R$100</Text>
+                          </View>
+                        </View>
+                      ) : null}
+                      <TouchableOpacity
+                        onPress={() => {
+                          setPayment(true);
+                        }}
+                        style={{
+                          width: "90%",
+                          backgroundColor: "#333",
+                          justifyContent: "center",
+                          alignItems: "center",
+                          borderRadius: 5,
+                          marginLeft: "5%",
+                          marginRight: "5%",
+                          height: 50,
+                        }}
+                      >
+                        <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                          Concluir pedido!
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                </View>
+              ) : (
+                <>
+                  <TouchableOpacity // se user tiver cartao no secureStore mostra se não prossegue p pagina de cartao
+                    onPress={() => modal[0].openModal()}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      paddingHorizontal: 20,
+                      paddingVertical: 10,
+                      borderBottomColor: "#f9f9f9",
+                      borderBottomWidth: 1,
+                    }}
+                  >
+                    <View
                       style={{
-                        height: 60,
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 5,
+                      }}
+                    >
+                    <Text style={{ fontWeight: "bold" }}>
+                        Entregar em</Text>
+                      <FontAwesome5
+                        name="angle-down"
+                        size={15}
+                        style={{ marginTop: 2, marginLeft: 5 }}
+                        color={"#333"}
+                      />
+                    </View>
+                    <Text style={{ }}>
+                      Av. Presidente Kennedy 289, Jardim Alexandrina - Anapolis,
+                      GO
+                    </Text>
+                  </TouchableOpacity>
+                  {cart.length > 0 ? (
+                    <ScrollView style={s.content}>
+                      {Array(5)
+                        .fill(0)
+                        .map((_, i) => (
+                          <TouchableOpacity
+                            onPress={() => setProductOpen(true)}
+                            style={s.content__row}
+                            key={i}
+                          >
+                            <View
+                              style={{ display: "flex", flexDirection: "row" }}
+                            >
+                              <View style={s.content__avatar}></View>
+
+                              <Text
+                                style={{
+                                  marginTop: 10,
+                                  marginBottom: 10,
+                                  color: "#333",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                Nome
+                              </Text>
+                              <Text
+                                style={{
+                                  marginTop: 10,
+                                  marginBottom: 10,
+                                  color: "#333",
+                                  fontWeight: "bold",
+                                }}
+                              >
+                                (2)
+                              </Text>
+                            </View>
+                            <Text>R$99,99</Text>
+                          </TouchableOpacity>
+                        ))}
+                    </ScrollView>
+                  ) : null}
+                  <TouchableOpacity // se user tiver cartao no secureStore mostra se não prossegue p pagina de cartao
+                    onPress={() => setPayment(true)}
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                      paddingHorizontal: 20,
+                      paddingVertical: 10,
+                      borderBottomColor: "#f9f9f9",
+                      borderBottomWidth: 1,
+                    }}
+                  >
+                    <View
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        marginBottom: 5,
+                        justifyContent: "space-between",
+                      }}
+                    >
+                     <Text style={{ fontWeight: "bold" }}>Forma de Pagamento</Text>
+                      <FontAwesome5
+                        name="angle-down"
+                        size={15}
+                        style={{ marginTop: 2 }}
+                        color={"#333"}
+                      />
+                    </View>
+                    <Text style={{ }}>Mastercard *3154</Text>
+                  </TouchableOpacity>
+                  {cart.length > 0 ? (
+                    <View
+                      style={{
                         width: "100%",
+                        height: "auto",
                         paddingVertical: 10,
-                        borderBottomColor: "#f9f9f9",
-                        borderBottomWidth: 1,
+                        paddingHorizontal: 20,
+                        display: "flex",
+                        flexDirection: "column",
                       }}
                     >
                       <View
                         style={{
-                          paddingLeft: 20,
-                          paddingRight: 20,
                           display: "flex",
                           flexDirection: "row",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <View
-                          style={{
-                            width: 38,
-                            height: 38,
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Text
-                            style={{
-                              width: "100%",
-                              height: "100%",
-                              marginTop: "-15%",
-                              fontSize: 33,
-                            }}
-                          >
-                            +
-                          </Text>
-                        </View>
-
-                        <Text
-                          style={{
-                            marginTop: 10,
-                            marginBottom: 10,
-                            color: "#333",
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Adicionar Cartão de Credito
-                        </Text>
+                        <Text style={{ fontSize: 16 }}>Taxa de serviço</Text>
+                        <Text style={{ fontSize: 16 }}>R$5</Text>
                       </View>
-                    </TouchableOpacity>
-                    {cart.length > 0 ? (
                       <View
                         style={{
-                          width: "100%",
-                          height: "auto",
-                          paddingVertical: 10,
-                          paddingHorizontal: 20,
                           display: "flex",
-                          flexDirection: "column",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
                         }}
                       >
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Text style={{ fontSize: 16 }}>Taxa de serviço</Text>
-                          <Text style={{ fontSize: 16 }}>R$5</Text>
-                        </View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Text style={{ fontSize: 16 }}>Taxa de entrega</Text>
-                          <Text style={{ fontSize: 16 }}>R$10</Text>
-                        </View>
-                        <View
-                          style={{
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                            Total
-                          </Text>
-                          <Text style={{ fontSize: 16 }}>R$100</Text>
-                        </View>
+                        <Text style={{ fontSize: 16 }}>Taxa de entrega</Text>
+                        <Text style={{ fontSize: 16 }}>R$10</Text>
                       </View>
-                    ) : null}
+                      <View
+                        style={{
+                          display: "flex",
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <Text style={{ fontSize: 16, fontWeight: "bold" }}>
+                          Total
+                        </Text>
+                        <Text style={{ fontSize: 16 }}>R$100</Text>
+                      </View>
+                    </View>
+                  ) : null}
+                  {cart.length > 0 ? (
                     <TouchableOpacity
                       onPress={() => {
                         setPayment(true);
                       }}
                       style={{
+                        marginBottom: 10,
                         width: "90%",
                         backgroundColor: "#333",
                         justifyContent: "center",
@@ -501,144 +678,31 @@ export function SnappingList(props) {
                         Concluir pedido!
                       </Text>
                     </TouchableOpacity>
-                  </View>
-                )}
-              </View>
-            ) : (
-              <>
-                {cart.length > 0 ? (
-                  <ScrollView style={s.content}>
-                    {Array(5)
-                      .fill(0)
-                      .map((_, i) => (
-                        <TouchableOpacity
-                          onPress={() => setProductOpen(true)}
-                          style={s.content__row}
-                          key={i}
-                        >
-                          <View
-                            style={{ display: "flex", flexDirection: "row" }}
-                          >
-                            <View style={s.content__avatar}>
-
-                            </View>
-
-                            <Text
-                              style={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                color: "#333",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              Nome
-                            </Text>
-                            <Text
-                              style={{
-                                marginTop: 10,
-                                marginBottom: 10,
-                                color: "#333",
-                                fontWeight: "bold",
-                              }}
-                            >
-                              (2)
-                            </Text>
-                          </View>
-                          <Text>R$99,99</Text>
-                        </TouchableOpacity>
-                      ))}
-                  </ScrollView>
-                ) : null}
-                {cart.length > 0 ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      height: "auto",
-                      paddingVertical: 10,
-                      paddingHorizontal: 20,
-                      display: "flex",
-                      flexDirection: "column",
-                    }}
-                  >
-                    <View
+                  ) : (
+                    <TouchableOpacity
+                      onPress={() => closeModal()}
                       style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
+                        marginTop: "auto",
+                        width: "90%",
+                        backgroundColor: "#333",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: 5,
+                        marginLeft: "5%",
+                        marginRight: "5%",
+                        height: 50,
                       }}
                     >
-                      <Text style={{ fontSize: 16 }}>Taxa de serviço</Text>
-                      <Text style={{ fontSize: 16 }}>R$5</Text>
-                    </View>
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text style={{ fontSize: 16 }}>Taxa de entrega</Text>
-                      <Text style={{ fontSize: 16 }}>R$10</Text>
-                    </View>
-                    <View
-                      style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <Text style={{ fontSize: 16, fontWeight: "bold" }}>
-                        Total
+                      <Text style={{ color: "#fff", fontWeight: "bold" }}>
+                        Seu carrinho está vazio!
                       </Text>
-                      <Text style={{ fontSize: 16 }}>R$100</Text>
-                    </View>
-                  </View>
-                ) : null}
-                {cart.length > 0 ? (
-                  <TouchableOpacity
-                    onPress={() => {
-                      setPayment(true);
-                    }}
-                    style={{
-                      marginBottom: 10,
-                      width: "90%",
-                      backgroundColor: "#333",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 5,
-                      marginLeft: "5%",
-                      marginRight: "5%",
-                      height: 50,
-                    }}
-                  >
-                    <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                      Concluir pedido!
-                    </Text>
-                  </TouchableOpacity>
-                ) : (
-                  <TouchableOpacity
-                    onPress={() => closeModal()}
-                    style={{
-                      marginTop: "auto",
-                      width: "90%",
-                      backgroundColor: "#333",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: 5,
-                      marginLeft: "5%",
-                      marginRight: "5%",
-                      height: 50,
-                    }}
-                  >
-                    <Text style={{ color: "#fff", fontWeight: "bold" }}>
-                      Seu carrinho está vazio!
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </>
-            )}
-          </View>
-        )}
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+            </View>
+          )}
+        </>
       </>
     );
   }, [
@@ -651,6 +715,7 @@ export function SnappingList(props) {
     cardNumber,
     expDate,
     cvc,
+    modal
   ]);
 
   return (
@@ -678,6 +743,11 @@ export function SnappingList(props) {
       >
         {renderContent()}
       </Modalize>
+      <Entrega
+        ref={(el) => {
+          modal[0] = el;
+        }}
+      />
     </>
   );
 }

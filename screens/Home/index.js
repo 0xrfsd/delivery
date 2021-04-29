@@ -256,9 +256,8 @@ const HomeScreen = ({ navigation }) => {
           Av. Pres. Kennedy 289
         </Text>
         <FontAwesome5
-          name="angle-down"
+          name="sort-down"
           size={15}
-          style={{ marginTop: 5 }}
           color={"#333"}
         />
       </TouchableOpacity>

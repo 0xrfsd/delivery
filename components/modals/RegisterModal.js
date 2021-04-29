@@ -184,6 +184,7 @@ export function RegisterModal(props) {
               setKeyboardAvoid(false);
             }}
             autoCompleteType={"email"}
+            keyboardType="email-address"
             autoCorrect={false}
             ref={emailTextInput}
             style={{

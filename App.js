@@ -16,10 +16,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import HomeScreen from "./screens/Home";
-import ProfileScreen from "./screens/Profile";
+import OrderScreen from "./screens/Orders/order.js";
+import SettingScreen from "./screens/Profile/screen";
 import IntroScreen from "./screens/Intro";
-import LoginScreen from "./screens/Login";
-import RegisterScreen from "./screens/Register";
 
 import { AuthContext } from "./Context";
 
@@ -29,7 +28,6 @@ import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import CommerceScreen from "./screens/Commerce/";
-import CategoriaScreen from "./screens/Categoria/";
 
 const NestedStack = createStackNavigator();
 
@@ -41,8 +39,6 @@ const IntroStack = () => {
         component={IntroScreen}
         options={{ headerShown: false }}
       />
-      <NestedStack.Screen name="Login" component={LoginScreen} />
-      <NestedStack.Screen name="Register" component={RegisterScreen} />
     </NestedStack.Navigator>
   );
 };
@@ -135,13 +131,18 @@ const App = () => {
                     options={{ headerShown: false }}
                   />
                   <RootStack.Screen
+                    name="Setting"
+                    component={SettingScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <RootStack.Screen
                     name="Commerce"
                     component={CommerceScreen}
                     options={{ headerShown: false }}
                   />
                   <RootStack.Screen
-                    name="Categoria"
-                    component={CategoriaScreen}
+                    name="Order"
+                    component={OrderScreen}
                     options={{ headerShown: false }}
                   />
                 </>
