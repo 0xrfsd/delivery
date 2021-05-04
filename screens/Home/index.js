@@ -8,9 +8,16 @@ import {
   TextInput,
   Dimensions,
   Image,
-  TouchableOpacity,
+  Pressable,
   Keyboard,
+  ImageBackground,
+  LogBox,
 } from "react-native";
+
+import Picache from "picache2";
+
+import * as Location from "expo-location";
+import * as TaskManager from 'expo-task-manager';
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
@@ -22,11 +29,13 @@ import Commerces from "./Commerces";
 
 import { Button } from "../../components/button/Button";
 
-import ImageCardOne from "../../assets/verduras.jpg";
-import ImageCardTwo from "../../assets/acougue.jpg";
+import Atendente from "../../assets/tumb.jpg";
+import Background from "../../assets/grocery.png";
 
 import { Carrinho } from "../../components/modals/Carrinho";
 import { Entrega } from "../../components/modals/Entrega";
+
+import { Permissions } from "expo";
 
 import {
   Fontisto,
@@ -43,6 +52,9 @@ const HomeScreen = ({ navigation }) => {
 
   const [showFilter, setShowFilter] = React.useState(false);
   const [counter, setCounter] = React.useState(0);
+
+  const [location, setLocation] = React.useState(null);
+  const [errorMsg, setErrorMsg] = React.useState(null);
 
   const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
@@ -126,39 +138,64 @@ const HomeScreen = ({ navigation }) => {
   //     });
   // };
 
+  LogBox.ignoreLogs([
+    `"requestPermissionsAsync" is now deprecated. Please, use "requestForegroundPermissionsAsync" or "requestBackgroundPermissionsAsync" instead.`,
+    `Warning: Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.`,
+  ]);
+
   React.useEffect(() => {
     getToken();
+    _getLocation();
   }, []);
+
+  const _getLocation = async () => {
+    let { status } = await Location.requestPermissionsAsync();
+    if (status !== 'granted') {
+      setErrorMsg('Permission to access location was denied');
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.High});
+    setLocation(location);
+  };
+
+  let text = "Waiting..";
+  if (errorMsg) {
+    text = errorMsg;
+  } else if (location) {
+    text = JSON.stringify(location);
+    console.log(text)
+  }
 
   const commerces = [
     {
       key: String(Math.random()),
-      image: ImageCardOne,
-      name: "Comercio A",
+      image: require("../../assets/baratao.jpg"),
+      name: "Mercado Da Terra Hortifruti",
       rate: "5.0",
       location: "Av. Pres. Kennedy 290",
       timing: "10-30 min",
     },
     {
       key: String(Math.random()),
-      image: ImageCardTwo,
-      name: "Comercio B",
+      image: require("../../assets/pegpag.jpg"),
+      name: "Geni Mercado",
       rate: "5.0",
       location: "Av. Pres. Kennedy 290",
       timing: "10-30 min",
     },
     {
       key: String(Math.random()),
-      image: ImageCardOne,
-      name: "Comercio C",
+      image: require("../../assets/baratao.jpg"),
+      name: "Mercadinho Peg Menos",
       rate: "5.0",
       location: "Av. Pres. Kennedy 290",
       timing: "10-30 min",
     },
     {
       key: String(Math.random()),
-      image: ImageCardTwo,
-      name: "Comercio D",
+      image: require("../../assets/pegpag.jpg"),
+      name: "Mercadinho Peg Menos",
       rate: "5.0",
       location: "Av. Pres. Kennedy 290",
       timing: "10-30 min",
@@ -167,25 +204,25 @@ const HomeScreen = ({ navigation }) => {
 
   const categorias = [
     {
-      image: ImageCardOne,
+      image: require("../../assets/baratao.jpg"),
       key: String(Math.random()),
       name: "Mercearia",
       mercados: ["Big", "Bog", "Bug"],
     },
     {
-      image: ImageCardTwo,
+      image: require("../../assets/pegpag.jpg"),
       key: String(Math.random()),
       name: "Açougue",
       mercados: ["Big", "Bog", "Bug"],
     },
     {
-      image: ImageCardOne,
+      image: require("../../assets/baratao.jpg"),
       key: String(Math.random()),
       name: "Açougue",
       mercados: ["Big", "Bog", "Bug"],
     },
     {
-      image: ImageCardTwo,
+      image: require("../../assets/pegpag.jpg"),
       key: String(Math.random()),
       name: "Açougue",
       mercados: ["Big", "Bog", "Bug"],
@@ -196,7 +233,7 @@ const HomeScreen = ({ navigation }) => {
 
   const renderCarrinho = () => {
     return (
-      <TouchableOpacity
+      <Pressable
         onPress={() => modal[0].openModal()}
         style={{
           marginTop: "-1.5%",
@@ -231,13 +268,13 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text style={{ color: "#fff" }}>{counter}</Text>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
   const renderEntrega = () => {
     return (
-      <TouchableOpacity
+      <Pressable
         onPress={() => modal[1].openModal()}
         style={{
           display: "flex",
@@ -255,25 +292,25 @@ const HomeScreen = ({ navigation }) => {
         >
           Av. Pres. Kennedy 289
         </Text>
-        <FontAwesome5
-          name="sort-down"
-          size={15}
-          color={"#333"}
-        />
-      </TouchableOpacity>
+        <FontAwesome5 name="sort-down" size={15} color={"#333"} />
+      </Pressable>
     );
   };
 
   return (
-    <SafeAreaView>
-      <View>
+    <>
+      <ImageBackground
+        source={Background}
+        style={{ height: 150, width: "100%" }}
+      >
         <View style={{ marginTop: 20, display: "flex", flexDirection: "row" }}>
           <TextInput
             value={searchTerm}
             onChangeText={(e) => {
-              if(e.length > 0) {
+              if (e.length > 0) {
                 setShowFilter(true);
               } else {
+                Keyboard.dismiss();
                 setShowFilter(false);
               }
               searchHandler(e);
@@ -282,7 +319,7 @@ const HomeScreen = ({ navigation }) => {
               Keyboard.dismiss();
             }}
             ref={searchInput}
-            placeholder="Pesquise por supermercados ou categorias"
+            placeholder="Encontre seu mercado"
             style={{
               borderRadius: 5,
               padding: 10,
@@ -294,10 +331,10 @@ const HomeScreen = ({ navigation }) => {
               height: 50,
             }}
           />
-          <TouchableOpacity
+          <Pressable
             onPress={() => {
               searchInput.current.clear();
-              if(showFilter === true) {
+              if (showFilter === true) {
                 setShowFilter(!showFilter);
               }
               setSearchTerm("");
@@ -317,75 +354,172 @@ const HomeScreen = ({ navigation }) => {
             ) : (
               <Fontisto name="search" size={20} color={"#fff"} />
             )}
-          </TouchableOpacity>
+          </Pressable>
         </View>
-        <View
-          style={{
-            justifyContent: "center",
-            width: "100%",
-            height: "auto",
-          }}
-        >
+        <View>
           <View
             style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              marginRight: 20,
+              justifyContent: "center",
+              width: "100%",
+              height: "auto",
             }}
           >
             <View
               style={{
-                height: "auto",
-                paddingLeft: 20,
-                paddingBottom: 15,
-                backgroundColor: "transparent",
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                marginRight: 20,
               }}
             >
-              <Text>Entregar em</Text>
-              {renderEntrega()}
-            </View>
-            <View
-              style={{
-                height: "auto",
-                paddingLeft: 20,
-                paddingBottom: 15,
-                backgroundColor: "transparent",
-                display: "flex",
-                flexDirection: "column",
-              }}
-            >
-              <Text>Prazo de entrega</Text>
               <View
-                style={{ display: "flex", marginTop: 5, flexDirection: "row" }}
+                style={{
+                  height: "auto",
+                  paddingLeft: 20,
+                  paddingBottom: 15,
+                  backgroundColor: "transparent",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
-                <Text style={{ display: "flex", marginLeft: "auto" }}>
-                  10-25 min
-                </Text>
-                <FontAwesome5
-                  name="clock"
-                  size={15}
-                  style={{ marginLeft: 5, marginTop: 2 }}
-                  color={"#333"}
-                />
+                <Text style={{ fontWeight: "bold" }}>Entregar em</Text>
+                {renderEntrega()}
+              </View>
+              <View
+                style={{
+                  height: "auto",
+                  paddingLeft: 20,
+                  paddingBottom: 15,
+                  backgroundColor: "transparent",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Text style={{ fontWeight: "bold" }}>Prazo de entrega</Text>
+                <View
+                  style={{
+                    display: "flex",
+                    marginTop: 5,
+                    flexDirection: "row",
+                  }}
+                >
+                  <Text style={{ display: "flex", marginLeft: "auto" }}>
+                    Emté 60 min
+                  </Text>
+                  <FontAwesome5
+                    name="clock"
+                    size={15}
+                    style={{ marginLeft: 5, marginTop: 2 }}
+                    color={"#333"}
+                  />
+                </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
-      <ScrollView>
+      </ImageBackground>
+
+      <ScrollView style={{ backgroundColor: "#FCF8F5" }}>
         {showFilter ? null : (
           <>
-            <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
-              Os mais pedidos
+            <ImageBackground
+              source={Atendente}
+              opacity={0.5}
+              imageStyle={{ borderRadius: 5 }}
+              style={{
+                backgroundColor: "#333",
+                width: "auto",
+                justifyContent: "space-between",
+                paddingBottom: 5,
+                borderRadius: 5,
+                marginHorizontal: "5%",
+                height: 150,
+              }}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  marginRight: 10,
+                  marginTop: 10,
+                  fontSize: 16,
+                  textAlign: "center",
+                }}
+              >
+                Fazer suas compras de supermercado ficou mais fácil com o{" "}
+                <Text style={{ fontWeight: "bold" }}>Entrega +</Text>{" "}
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  marginRight: 8,
+                  fontSize: 16,
+                  textAlign: "left",
+                }}
+              >
+                1º Escolha o seu{" "}
+                <Text style={{ fontWeight: "bold" }}>mercado</Text>
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  marginRight: 10,
+                  fontSize: 16,
+                  textAlign: "left",
+                }}
+              >
+                2º Monte seu{" "}
+                <Text style={{ fontWeight: "bold" }}>carrinho</Text>{" "}
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  marginRight: 10,
+                  fontSize: 16,
+                  textAlign: "left",
+                }}
+              >
+                3º Faça seu <Text style={{ fontWeight: "bold" }}>pedido</Text>{" "}
+              </Text>
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  marginRight: 10,
+                  marginBottom: 5,
+                  fontSize: 16,
+                  textAlign: "left",
+                }}
+              >
+                4º Receba suas compras{" "}
+                <Text style={{ fontWeight: "bold" }}>na sua casa</Text>{" "}
+              </Text>
+            </ImageBackground>
+            <Text
+              style={{
+                marginLeft: 20,
+                marginBottom: "-3%",
+                marginTop: "5%",
+                fontSize: 20,
+              }}
+            >
+              Mercados perto de você
             </Text>
             <Carousel>
               {commerces.map((commerce, index) => {
                 return (
                   <View key={index}>
-                    <TouchableOpacity
+                    <Pressable
+                      style={{
+                        backgroundColor: "transparent",
+                        height: "auto",
+                        width: 120,
+                        borderRadius: 5,
+                        marginRight: 10,
+                      }}
                       onPress={() =>
                         navigation.navigate("Commerce", {
                           name: commerce.name,
@@ -395,33 +529,86 @@ const HomeScreen = ({ navigation }) => {
                         })
                       }
                     >
-                      <Image
+                      <Picache
                         key={commerce.key}
                         source={commerce.image}
                         style={{
-                          borderTopLeftRadius: 10,
-                          borderTopRightRadius: 10,
-                          height: 150,
-                          width: 200,
+                          borderRadius: 5,
+                          height: 120,
+                          width: 120,
+                          marginVertical: 5,
+                          marginHorizontal: 5,
                           marginRight: 10,
                         }}
                       />
                       <View
                         style={{
-                          width: 200,
-                          padding: 10,
+                          borderBottomLeftRadius: 5,
+                          borderBottomRightRadius: 5,
+                          paddingHorizontal: 10,
                           height: "auto",
                           justifyContent: "center",
-                          alignItems: "center",
                           display: "flex",
-                          backgroundColor: "#333",
-                          borderBottomLeftRadius: 10,
-                          borderBottomRightRadius: 10,
                         }}
                       >
-                        <Text style={{ color: "#fff" }}>{commerce.name}</Text>
+                        <Text style={{ color: "#333" }}>{commerce.name}</Text>
                       </View>
-                    </TouchableOpacity>
+                    </Pressable>
+                  </View>
+                );
+              })}
+            </Carousel>
+            <Text
+              style={{ marginLeft: "5%", marginBottom: "-3%", fontSize: 20 }}
+            >
+              Mais pedidos na sua região
+            </Text>
+            <Carousel>
+              {commerces.map((commerce, index) => {
+                return (
+                  <View key={index}>
+                    <Pressable
+                      style={{
+                        backgroundColor: "transparent",
+                        height: "auto",
+                        width: 120,
+                        borderRadius: 5,
+                        marginRight: 10,
+                      }}
+                      onPress={() =>
+                        navigation.navigate("Commerce", {
+                          name: commerce.name,
+                          rate: commerce.rate,
+                          location: commerce.location,
+                          timing: commerce.timing,
+                        })
+                      }
+                    >
+                      <Picache
+                        key={commerce.key}
+                        source={commerce.image}
+                        style={{
+                          borderRadius: 5,
+                          height: 120,
+                          width: 120,
+                          marginVertical: 5,
+                          marginHorizontal: 5,
+                          marginRight: 10,
+                        }}
+                      />
+                      <View
+                        style={{
+                          borderBottomLeftRadius: 5,
+                          borderBottomRightRadius: 5,
+                          paddingHorizontal: 10,
+                          height: "auto",
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        <Text style={{ color: "#333" }}>{commerce.name}</Text>
+                      </View>
+                    </Pressable>
                   </View>
                 );
               })}
@@ -443,7 +630,7 @@ const HomeScreen = ({ navigation }) => {
               {searchResults.map((commerce, index) => {
                 return (
                   <View key={index} style={{ padding: 20 }}>
-                    <TouchableOpacity
+                    <Pressable
                       onPress={() =>
                         navigation.navigate("Commerce", {
                           name: commerce.name,
@@ -453,7 +640,7 @@ const HomeScreen = ({ navigation }) => {
                         })
                       }
                     >
-                      <Image
+                      <Picache
                         key={commerce.key}
                         source={commerce.image}
                         style={{
@@ -471,43 +658,43 @@ const HomeScreen = ({ navigation }) => {
                           height: "auto",
                           justifyContent: "center",
                           display: "flex",
-                          backgroundColor: "#333",
+                          backgroundColor: "#fff",
                           borderBottomLeftRadius: 10,
                           borderBottomRightRadius: 10,
                         }}
                       >
-                        <Text style={{ color: "#fff", fontSize: 20 }}>
+                        <Text style={{ color: "#333", fontSize: 20 }}>
                           {commerce.name}
                         </Text>
                         <View style={{ display: "flex", flexDirection: "row" }}>
-                          <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
+                          <Text style={{ color: "#333" }}>{commerce.rate}</Text>
                           <Text
                             style={{
-                              color: "#fff",
+                              color: "#333",
                               marginLeft: 5,
                               marginRight: 5,
                             }}
                           >
                             •
                           </Text>
-                          <Text style={{ color: "#fff" }}>
+                          <Text style={{ color: "#333" }}>
                             {commerce.location}
                           </Text>
                           <Text
                             style={{
-                              color: "#fff",
+                              color: "#333",
                               marginLeft: 5,
                               marginRight: 5,
                             }}
                           >
                             •
                           </Text>
-                          <Text style={{ color: "#fff" }}>
+                          <Text style={{ color: "#333" }}>
                             {commerce.timing}
                           </Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
+                    </Pressable>
                   </View>
                 );
               })}
@@ -518,8 +705,18 @@ const HomeScreen = ({ navigation }) => {
             <>
               {commerces.map((commerce, index) => {
                 return (
-                  <View key={index} style={{ padding: 20 }}>
-                    <TouchableOpacity
+                  <View
+                    key={index}
+                    style={{
+                      height: "auto",
+                      width: "90%",
+                      marginHorizontal: "5%",
+                      borderRadius: 5,
+                      marginVertical: 10,
+                      backgroundColor: "#fff",
+                    }}
+                  >
+                    <Pressable
                       onPress={() =>
                         navigation.navigate("Commerce", {
                           name: commerce.name,
@@ -529,7 +726,7 @@ const HomeScreen = ({ navigation }) => {
                         })
                       }
                     >
-                      <Image
+                      <Picache
                         key={commerce.key}
                         source={commerce.image}
                         style={{
@@ -547,50 +744,50 @@ const HomeScreen = ({ navigation }) => {
                           height: "auto",
                           justifyContent: "center",
                           display: "flex",
-                          backgroundColor: "#333",
+                          backgroundColor: "#fff",
                           borderBottomLeftRadius: 10,
                           borderBottomRightRadius: 10,
                         }}
                       >
-                        <Text style={{ color: "#fff", fontSize: 20 }}>
-                          {commerce.name}
-                        </Text>
-                        <View style={{ display: "flex", flexDirection: "row" }}>
-                          <Text style={{ color: "#fff" }}>{commerce.rate}</Text>
-                          <Text
-                            style={{
-                              color: "#fff",
-                              marginLeft: 5,
-                              marginRight: 5,
-                            }}
-                          >
-                            •
+                        <View
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                          }}
+                        >
+                          <Text style={{ color: "#333", fontSize: 20 }}>
+                            {commerce.name}
                           </Text>
-                          <Text style={{ color: "#fff" }}>
+                          <Text style={{ color: "#333", fontSize: 20 }}>
+                            {commerce.rate}
+                          </Text>
+                        </View>
+                        <View style={{ display: "flex", flexDirection: "row" }}>
+                          <Text style={{ color: "#333" }}>
                             {commerce.location}
                           </Text>
                           <Text
                             style={{
-                              color: "#fff",
+                              color: "#333",
                               marginLeft: 5,
                               marginRight: 5,
                             }}
                           >
                             •
                           </Text>
-                          <Text style={{ color: "#fff" }}>
+                          <Text style={{ color: "#333" }}>
                             {commerce.timing}
                           </Text>
                         </View>
                       </View>
-                    </TouchableOpacity>
+                    </Pressable>
                   </View>
                 );
               })}
             </>
           ) : null}
         </View>
-        <View style={{ height: 150, alignItems: "center" }} />
       </ScrollView>
       <Carrinho
         ref={(el) => {
@@ -602,7 +799,7 @@ const HomeScreen = ({ navigation }) => {
           modal[1] = el;
         }}
       />
-    </SafeAreaView>
+    </>
   );
 };
 

@@ -17,6 +17,12 @@
       "**/*"
     ],
     "ios": {
+      "infoPlist": {
+        "UIBackgroundModes": [
+          "location",
+          "fetch"
+        ]
+      },
       "supportsTablet": true,
       "bundleIdentifier": "com.deliverymais"
     },

@@ -6,14 +6,17 @@ import {
   Pressable,
   FlatList,
   Dimensions,
+  Image,
   SafeAreaView,
 } from "react-native";
+
+import Store from "../../assets/verduras.jpg";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const Orders = ({ navigation }) => {
-  const pedidos = ["", "", "", "", ""];
-  const [activeOrder, setActiveOrder] = React.useState([]);
+  const pedidos = [];
+  const [activeOrder, setActiveOrder] = React.useState(false);
 
   const formatData = (pedidos, numColumns) => {
     const totalRows = Math.floor(pedidos.length / numColumns);
@@ -26,12 +29,18 @@ const Orders = ({ navigation }) => {
     return (
       <Pressable
         style={{
+          padding: 10,
           marginRight: 10,
           marginTop: 10,
           width: "100%",
-          height: 120,
+          height: "auto",
+          borderColor: "#333",
           borderRadius: 5,
-          backgroundColor: "#333",
+          backgroundColor: "transparent",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: 1 },
+          shadowOpacity: 0.8,
+          shadowRadius: 1,
         }}
         onPress={() =>
           navigation.navigate("Order", {
@@ -42,17 +51,107 @@ const Orders = ({ navigation }) => {
         <View
           style={{
             display: "flex",
-            marginTop: "auto",
-            backgroundColor: "#333",
-            height: 40,
+            backgroundColor: "transparent",
             width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
           }}
         >
-          <Text style={{ color: "#fff" }}>{item}</Text>
+          <Image
+            style={{ width: "100%", height: 100, borderRadius: 5 }}
+            source={Store}
+          />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              paddingBottom: 5,
+            }}
+          >
+            <Text style={{ color: "#333", fontWeight: "bold", fontSize: 16 }}>
+              Mercadin do gemin{" "}
+            </Text>
+          <Text style={{ color: "#333", fontSize: 14, marginTop: 2 }}>
+              03/05/21 às 13:04
+            </Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "column" }}>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
+          <Text style={{ color: "#333" }}>Alface </Text>
+          <Text style={{ color: "#333", }}>Entregue</Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
+          <Text style={{ color: "#333" }}>Tomate </Text>
+          <Text style={{ color: "#333", }}>Pagamento online</Text>
+          </View>
+          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
+          <Text style={{ color: "#333" }}>Tomate (...) </Text>
+          <Text style={{ color: "#333", }}>R$198</Text>
+          </View>
+          </View>
+        </View>
+        <View
+          style={{
+            paddingRight: 5,
+            width: "100%",
+            height: "auto",
+            paddingTop: 15,
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Pressable
+            style={{
+              borderRadius: 5,
+              width: "50%",
+              height: "auto",
+              padding: 10,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "#333",
+              textAlign: "center",
+              color: "#333",
+            }}
+          >
+            <Text
+              style={{
+                fontWeight: "bold",
+                color: "#fff",
+              }}
+            >
+              Refazer pedido
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              navigation.navigate("Order", {
+                order: "order",
+              });
+            }}
+            style={{
+              marginLeft: "1%",
+              borderRadius: 5,
+              width: "50%",
+              height: "auto",
+              padding: 10,
+              justifyContent: "center",
+              alignItems: "center",
+              borderWidth: 2,
+              borderColor: "#333",
+              backgroundColor: "transparent",
+              textAlign: "center",
+              color: "#333",
+            }}
+          >
+            <Text
+              style={{
+                color: "#000",
+              }}
+            >
+              Detalhes do pedido
+            </Text>
+          </Pressable>
         </View>
       </Pressable>
     );
@@ -87,22 +186,22 @@ const Orders = ({ navigation }) => {
           MEUS PEDIDOS
         </Text>
       </View>
-      <Text
-        style={{
-          color: "#333",
-          marginLeft: 20,
-          marginRight: 10,
-        }}
-      >
-        Pedindo em
-        <Text style={{ fontWeight: "bold" }}>
-          {""} Mercadin do gemin {""}
-        </Text>
-        em andamento
-      </Text>
 
       {activeOrder ? (
         <>
+          <Text
+            style={{
+              color: "#333",
+              marginLeft: 20,
+              marginRight: 10,
+            }}
+          >
+            Pedindo em
+            <Text style={{ fontWeight: "bold" }}>
+              {""} Mercadin do gemin {""}
+            </Text>
+            em andamento
+          </Text>
           <Pressable
             onPress={() => navigation.navigate("Order", {})}
             style={{
@@ -115,7 +214,7 @@ const Orders = ({ navigation }) => {
               backgroundColor: "#333",
             }}
           >
-            <Text>Oi</Text>
+            <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#fff' }}>Ao ler isso, pegar pra fazer sem preguiça!</Text>
           </Pressable>
         </>
       ) : null}

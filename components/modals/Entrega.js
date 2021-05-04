@@ -76,7 +76,7 @@ export class Entrega extends React.PureComponent {
 
   render() {
     return (
-      <Modalize ref={this.modal} handlePosition="inside" adjustToContentHeight>
+      <Modalize ref={this.modal} modalHeight={170} handlePosition="inside">
         {this.renderContent()}
       </Modalize>
     );

@@ -12,7 +12,7 @@ import OrderScreen from "./screens/Orders/index.js";
 const Tab = createBottomTabNavigator();
 
 const HomeTabNavigator = () => {
-  const [orderActive, setOrderActive] = React.useState(true);
+  const [orderActive, setOrderActive] = React.useState(false);
 
   return (
     <Tab.Navigator
