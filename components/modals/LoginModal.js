@@ -521,6 +521,7 @@ export function LoginModal(props) {
   return (
     <>
       <Modalize
+        handlePosition="inside"
         ref={modalizeRef}
         onOpened={() => handlerStateChange(true)}
         onClosed={() => {

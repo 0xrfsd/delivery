@@ -4,18 +4,19 @@ import {
   View,
   Text,
   Pressable,
+  TouchableOpacity,
   FlatList,
   Dimensions,
   Image,
   SafeAreaView,
 } from "react-native";
 
-import Store from "../../assets/verduras.jpg";
+import Store from "../../assets/baratao.jpg";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const Orders = ({ navigation }) => {
-  const pedidos = [];
+  const pedidos = ["", ""];
   const [activeOrder, setActiveOrder] = React.useState(false);
 
   const formatData = (pedidos, numColumns) => {
@@ -31,13 +32,12 @@ const Orders = ({ navigation }) => {
         style={{
           padding: 10,
           marginRight: 10,
-          marginTop: 10,
           width: "100%",
           height: "auto",
           borderColor: "#333",
           borderRadius: 5,
           backgroundColor: "transparent",
-          shadowColor: "#000",
+          shadowColor: "#fff",
           shadowOffset: { width: 0, height: 1 },
           shadowOpacity: 0.8,
           shadowRadius: 1,
@@ -58,7 +58,8 @@ const Orders = ({ navigation }) => {
           }}
         >
           <Image
-            style={{ width: "100%", height: 100, borderRadius: 5 }}
+            resizeMode="stretch"
+            style={{ height: 170, width: "100%", marginBottom: 5, borderRadius: 5 }}
             source={Store}
           />
           <View
@@ -69,26 +70,44 @@ const Orders = ({ navigation }) => {
               paddingBottom: 5,
             }}
           >
-            <Text style={{ color: "#333", fontWeight: "bold", fontSize: 16 }}>
-              Mercadin do gemin{" "}
+            <Text style={{ color: "#333", fontWeight: "bold", width: '60%', fontSize: 16 }}>
+              Mercado da Terra Hortifruti{" "}
             </Text>
-          <Text style={{ color: "#333", fontSize: 14, marginTop: 2 }}>
+            <Text style={{ color: "#333", fontSize: 14, marginTop: 2 }}>
               03/05/21 às 13:04
             </Text>
           </View>
           <View style={{ display: "flex", flexDirection: "column" }}>
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
-          <Text style={{ color: "#333" }}>Alface </Text>
-          <Text style={{ color: "#333", }}>Entregue</Text>
-          </View>
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
-          <Text style={{ color: "#333" }}>Tomate </Text>
-          <Text style={{ color: "#333", }}>Pagamento online</Text>
-          </View>
-          <View style={{ display: "flex", flexDirection: "row", justifyContent: 'space-between' }}>
-          <Text style={{ color: "#333" }}>Tomate (...) </Text>
-          <Text style={{ color: "#333", }}>R$198</Text>
-          </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#333" }}>Alface </Text>
+              <Text style={{ color: "#333" }}>Entregue</Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#333" }}>Tomate </Text>
+              <Text style={{ color: "#333" }}>Pagamento online</Text>
+            </View>
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={{ color: "#333" }}>Tomate (...) </Text>
+              <Text style={{ color: "#333" }}>R$198</Text>
+            </View>
           </View>
         </View>
         <View
@@ -101,7 +120,7 @@ const Orders = ({ navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Pressable
+          <TouchableOpacity
             style={{
               borderRadius: 5,
               width: "50%",
@@ -122,8 +141,8 @@ const Orders = ({ navigation }) => {
             >
               Refazer pedido
             </Text>
-          </Pressable>
-          <Pressable
+          </TouchableOpacity>
+          <TouchableOpacity
             onPress={() => {
               navigation.navigate("Order", {
                 order: "order",
@@ -137,7 +156,7 @@ const Orders = ({ navigation }) => {
               padding: 10,
               justifyContent: "center",
               alignItems: "center",
-              borderWidth: 2,
+              borderWidth: 1,
               borderColor: "#333",
               backgroundColor: "transparent",
               textAlign: "center",
@@ -151,7 +170,7 @@ const Orders = ({ navigation }) => {
             >
               Detalhes do pedido
             </Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </Pressable>
     );
@@ -214,7 +233,9 @@ const Orders = ({ navigation }) => {
               backgroundColor: "#333",
             }}
           >
-            <Text style={{ fontSize: 26, fontWeight: 'bold', color: '#fff' }}>Ao ler isso, pegar pra fazer sem preguiça!</Text>
+            <Text style={{ fontSize: 26, fontWeight: "bold", color: "#fff" }}>
+              Ao ler isso, pegar pra fazer sem preguiça!
+            </Text>
           </Pressable>
         </>
       ) : null}
@@ -222,9 +243,9 @@ const Orders = ({ navigation }) => {
       {pedidos.length > 0 ? (
         <FlatList
           style={{
-            marginLeft: "5%",
-            marginRight: "5%",
-            width: "90%",
+            marginLeft: "2.5%",
+            marginRight: "2.5%",
+            width: "95%",
             height: activeOrder
               ? Platform.OS === "ios"
                 ? "61.4%"

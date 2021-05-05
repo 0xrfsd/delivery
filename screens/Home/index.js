@@ -17,7 +17,7 @@ import {
 import Picache from "picache2";
 
 import * as Location from "expo-location";
-import * as TaskManager from 'expo-task-manager';
+import * as TaskManager from "expo-task-manager";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import jwt_decode from "jwt-decode";
@@ -34,6 +34,7 @@ import Background from "../../assets/grocery.png";
 
 import { Carrinho } from "../../components/modals/Carrinho";
 import { Entrega } from "../../components/modals/Entrega";
+import { Endereco } from "../../components/modals/Endereco";
 
 import { Permissions } from "expo";
 
@@ -59,6 +60,8 @@ const HomeScreen = ({ navigation }) => {
   const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
+
+  const [modal, setModal] = React.useState([]);
 
   const searchHandler = (e) => {
     setSearchTerm(e);
@@ -150,12 +153,14 @@ const HomeScreen = ({ navigation }) => {
 
   const _getLocation = async () => {
     let { status } = await Location.requestPermissionsAsync();
-    if (status !== 'granted') {
-      setErrorMsg('Permission to access location was denied');
+    if (status !== "granted") {
+      setErrorMsg("Permission to access location was denied");
       return;
     }
 
-    let location = await Location.getCurrentPositionAsync({accuracy:Location.Accuracy.High});
+    let location = await Location.getCurrentPositionAsync({
+      accuracy: Location.Accuracy.High,
+    });
     setLocation(location);
   };
 
@@ -164,7 +169,7 @@ const HomeScreen = ({ navigation }) => {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
-    console.log(text)
+    console.log(text);
   }
 
   const commerces = [
@@ -228,8 +233,6 @@ const HomeScreen = ({ navigation }) => {
       mercados: ["Big", "Bog", "Bug"],
     },
   ];
-
-  const modal = [];
 
   const renderCarrinho = () => {
     return (
@@ -301,7 +304,7 @@ const HomeScreen = ({ navigation }) => {
     <>
       <ImageBackground
         source={Background}
-        style={{ height: 150, width: "100%" }}
+        style={{ height: "auto", width: "100%" }}
       >
         <View style={{ marginTop: 20, display: "flex", flexDirection: "row" }}>
           <TextInput
@@ -404,12 +407,12 @@ const HomeScreen = ({ navigation }) => {
                   }}
                 >
                   <Text style={{ display: "flex", marginLeft: "auto" }}>
-                    Emté 60 min
+                    Em até 60 min
                   </Text>
                   <FontAwesome5
                     name="clock"
                     size={15}
-                    style={{ marginLeft: 5, marginTop: 2 }}
+                    style={{ marginLeft: 5 }}
                     color={"#333"}
                   />
                 </View>
@@ -433,7 +436,7 @@ const HomeScreen = ({ navigation }) => {
                 paddingBottom: 5,
                 borderRadius: 5,
                 marginHorizontal: "5%",
-                height: 150,
+                height: 160,
               }}
             >
               <Text
@@ -442,12 +445,12 @@ const HomeScreen = ({ navigation }) => {
                   marginLeft: 10,
                   marginRight: 10,
                   marginTop: 10,
-                  fontSize: 16,
-                  textAlign: "center",
+                  fontSize: 18,
+                  textAlign: "left",
+                  fontWeight: "bold",
                 }}
               >
-                Fazer suas compras de supermercado ficou mais fácil com o{" "}
-                <Text style={{ fontWeight: "bold" }}>Entrega +</Text>{" "}
+                Fazer suas compras de supermercado ficou mais fácil!
               </Text>
               <Text
                 style={{
@@ -495,7 +498,7 @@ const HomeScreen = ({ navigation }) => {
                 }}
               >
                 4º Receba suas compras{" "}
-                <Text style={{ fontWeight: "bold" }}>na sua casa</Text>{" "}
+                <Text style={{ fontWeight: "bold" }}>na sua casa!</Text>
               </Text>
             </ImageBackground>
             <Text
@@ -618,7 +621,7 @@ const HomeScreen = ({ navigation }) => {
         <View>
           {showFilter ? (
             <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
-              Olha o que encontramos =)
+              Veja o que encontramos
             </Text>
           ) : (
             <Text style={{ marginLeft: "5%", marginTop: 10, fontSize: 22 }}>
@@ -727,12 +730,13 @@ const HomeScreen = ({ navigation }) => {
                       }
                     >
                       <Picache
+                        resizeMode="stretch"
                         key={commerce.key}
                         source={commerce.image}
                         style={{
                           borderTopLeftRadius: 10,
                           borderTopRightRadius: 10,
-                          height: 100,
+                          height: 170,
                           width: "100%",
                           marginRight: 10,
                         }}
@@ -794,11 +798,7 @@ const HomeScreen = ({ navigation }) => {
           modal[0] = el;
         }}
       />
-      <Entrega
-        ref={(el) => {
-          modal[1] = el;
-        }}
-      />
+      <Endereco modal={modal} setModal={setModal} modalIndex={1} />
     </>
   );
 };

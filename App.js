@@ -19,6 +19,7 @@ import HomeScreen from "./screens/Home";
 import OrderScreen from "./screens/Orders/order.js";
 import SettingScreen from "./screens/Profile/screen";
 import IntroScreen from "./screens/Intro";
+import EntregaScreen from "./screens/Entrega";
 
 import { AuthContext } from "./Context";
 
@@ -138,6 +139,11 @@ const App = () => {
                   <RootStack.Screen
                     name="Commerce"
                     component={CommerceScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <RootStack.Screen
+                    name="Entrega"
+                    component={EntregaScreen}
                     options={{ headerShown: false }}
                   />
                   <RootStack.Screen
