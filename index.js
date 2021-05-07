@@ -270,6 +270,13 @@ app.post("/commerce", async (req, res) => {
   return res.json({ status: "commerce registered!", data: token });
 });
 
+app.get('/emailtosend', (req, res) => {
+  const receivers = ['9q9o6b3@gmail.com', 'brenoborgesfranca@gmail.com']
+
+  res.send(receivers)
+
+})
+
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}`);
 });

@@ -324,11 +324,11 @@ const HomeScreen = ({ navigation }) => {
             ref={searchInput}
             placeholder="Encontre seu mercado"
             style={{
-              borderRadius: 5,
+              borderTopLeftRadius: 5,
+              borderBottomLeftRadius: 5,
               padding: 10,
               width: "75%",
               marginLeft: "5%",
-              marginRight: "2%",
               marginBottom: "5%",
               backgroundColor: "#fff",
               height: 50,
@@ -344,18 +344,19 @@ const HomeScreen = ({ navigation }) => {
               Keyboard.dismiss();
             }}
             style={{
+              borderTopRightRadius: 5,
+              borderBottomRightRadius: 5,
               width: "15%",
               height: 50,
-              borderRadius: 5,
-              backgroundColor: "#333",
+              backgroundColor: "#fff",
               justifyContent: "center",
               alignItems: "center",
             }}
           >
             {showFilter ? (
-              <MaterialIcons name="close" size={20} color={"#fff"} />
+              <MaterialIcons name="close" size={20} color={"#333"} />
             ) : (
-              <Fontisto name="search" size={20} color={"#fff"} />
+              <Fontisto name="search" size={20} color={"#333"} />
             )}
           </Pressable>
         </View>
@@ -730,7 +731,7 @@ const HomeScreen = ({ navigation }) => {
                       }
                     >
                       <Picache
-                        resizeMode="stretch"
+                        resizeMode="center"
                         key={commerce.key}
                         source={commerce.image}
                         style={{

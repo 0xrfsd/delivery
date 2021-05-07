@@ -3,31 +3,33 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
+  ScrollView,
   TouchableOpacity,
   ActivityIndicator,
   Alert,
   Platform,
   TextInput,
+  KeyboardAvoidingView,
   Keyboard,
 } from "react-native";
 import { Modalize } from "react-native-modalize";
 
-import { AuthContext } from "../../Context";
-import axios from "axios";
+import { Feather, Ionicons } from "@expo/vector-icons";
+import ProdutoImage from "../../assets/rexona.png";
 
-import storeToken from "../../storeToken";
+export function Produto(props) {
+  const modalMargin = Platform.OS === "ios" ? 0 : 20;
+  const paymentMargin = Platform.OS === "ios" ? 0 : 10;
 
-import * as Google from "expo-google-app-auth";
+  // alert(windowHeight);
 
-import { useNavigation } from "@react-navigation/native";
-
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-export function TelefoneModal(props) {
   const [opened, setOpened] = useState(false);
-  const [enviado, setEnviado] = useState(true)
+  const [items, setItems] = useState(0);
 
-  const [keyboardAvoid, setKeyboardAvoid] = useState(false);
+  const [adicionando, setAdicionando] = useState(true);
+
+  const [produto, setProduto] = useState('');
 
   const modalizeRef = useRef(<Modalize />);
 
@@ -38,6 +40,8 @@ export function TelefoneModal(props) {
     modal[modalIndex] = {
       openModal: () => openModal(),
       closeModal: () => closeModal(),
+      scrollToTop: () => scrollToTop(),
+      a: (d) => a(d)
     };
 
     setModal(modal);
@@ -55,168 +59,188 @@ export function TelefoneModal(props) {
     modalizeRef.current.close();
   };
 
-  const navigation = useNavigation();
+  const a = (d) => {
+    setProduto(d)
+  }
 
-  <storeToken />;
-
-  const { isAuth, setIsAuth } = React.useContext(AuthContext);
-
-  const [telefone, setTelefone] = React.useState("");
-  const [error, setError] = React.useState("");
-
-  const telefoneNumberInput = React.createRef();
-
-  const validar = async () => {
-    await axios
-      .post("http://192.168.1.104:3000/login", {
-        email: email,
-        senha: senha,
-      })
-      .then((response) => {
-        if (response.status == 200) {
-          if (response.data.status === "ok") {
-            storeToken(response.data.data).then(() => setIsAuth(true));
-          } else {
-            setError(response.data.error);
-          }
-        }
-      });
+  const scrollToTop = () => {
+    modalizeRef.current.scrollTo({
+      y: 0,
+      animated: true,
+    });
   };
 
   const renderHeader = useCallback(() => {
     return (
       <>
-        <View style={{ padding: 20 }}>
-          <Text style={{ color: "#333", fontSize: 20, fontWeight: "bold" }}>
-            {enviado ? 'Enviamos um codigo de confirmação por SMS' : 'Adicionar seu numero de telefone'}
-          </Text>
+        <View
+          style={{
+            borderTopLeftRadius: 50,
+            borderTopRightRadius: 50,
+            height: 80,
+            backgroundColor: "#fff",
+            paddingBottom: 15,
+            widht: "100%",
+            padding: 10,
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <View>
+              <Text style={{ fontWeight: "bold", fontSize: 26, width: "100%" }}>
+                {produto}
+              </Text>
+            </View>
+            <View style={{ display: "flex", flexDirection: "row" }}>
+              <TouchableOpacity onPress={() => closeModal()}>
+                <Ionicons name="close" size={32} color="black" />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </>
     );
-  }, [telefone, enviado]);
+  }, [items, produto]);
 
   const renderContent = useCallback(() => {
     return (
       <>
-        {enviado ? (
+        {adicionando ? (
           <>
             <View
               style={{
-                paddingHorizontal: 20,
+                height: 250,
+                backgroundColor: "#fff",
+                width: "100%",
+                paddingHorizontal: 10,
+              }}
+            >
+              <Image
+                resizeMode="contain"
+                source={ProdutoImage}
+                style={{ height: 190, width: "100%" }}
+              />
+              <View
+                style={{
+                  height: 60,
+                  display: "flex",
+                  flexDirection: "row",
+                  borderBottomWidth: 1,
+                  borderBottomColor: "#f9f9f9",
+                  borderTopWidth: 1,
+                  borderTopColor: "#f9f9f9",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Text style={{ fontSize: 32, textAlign: "center" }}>
+                  R$6,00
+                </Text>
+              </View>
+            </View>
+            <View
+              style={{
+                height: 50,
+                width: "100%",
                 display: "flex",
                 flexDirection: "row",
+                justifyContent: "space-between",
               }}
             >
-              <TextInput
-                maxLength={4}
-                keyboardType="numeric"
-                onFocus={() => {
-                  setKeyboardAvoid(true);
+              <TouchableOpacity
+                disabled={items > 0 ? false : true}
+                onPress={() => {
+                  if (items > 0) {
+                    setItems(items - 1);
+                  }
                 }}
-                onBlur={() => {
-                  setKeyboardAvoid(false);
+                style={{
+                  height: 70,
+                  width: "33%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
                 }}
-                placeholder="Codigo"
-                style={{ width: "90%", height: 30, marginLeft: 5 }}
-              />
+              >
+                <Text style={{ fontSize: 36, fontWeight: "bold" }}>-</Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  height: 70,
+                  width: "33%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Text style={{ fontSize: 36, fontWeight: "bold" }}>
+                  {items}
+                </Text>
+              </View>
+              <TouchableOpacity
+                onPress={() => setItems(items + 1)}
+                style={{
+                  height: 70,
+                  width: "33%",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  backgroundColor: "#fff",
+                }}
+              >
+                <Text style={{ fontSize: 36, fontWeight: "bold" }}>+</Text>
+              </TouchableOpacity>
             </View>
-            <Text
+            <TouchableOpacity
+              onPress={() => {
+                setTimeout(() => {
+                  closeModal();
+                }, 1000);
+              }}
               style={{
-                marginHorizontal: 20,
-                textAlign: "center",
-                color: "#555",
-                marginTop: 20,
+                height: 50,
+                backgroundColor: "blue",
+                margin: "5%",
+                width: "90%",
+                borderRadius: 5,
+                backgroundColor: "#333",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              Você pode receber atualizações por SMS do{" "}
-              <Text style={{ fontWeight: "bold" }}>Entrega +</Text> e pode
-              cancelar o recebimento a qualquer momento.
-            </Text>
+              <Text style={{ color: "#fff" }}>Adicionar ao carrinho</Text>
+            </TouchableOpacity>
           </>
         ) : (
           <>
             <View
               style={{
-                paddingHorizontal: 20,
-                display: "flex",
-                flexDirection: "row",
+                height: "100%",
+                padding: 10,
+                width: "100%",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <View
-                style={{
-                  height: 30,
-                  width: "10%",
-                  justifyContent: "center",
-                  borderRadius: 5,
-                  alignItems: "center",
-                  backgroundColor: "#333",
-                }}
-              >
-                <Text style={{ color: "#fff" }}>+55</Text>
-              </View>
-              <TextInput
-                maxLength={11}
-                keyboardType="numeric"
-                onFocus={() => {
-                  setKeyboardAvoid(true);
-                }}
-                onBlur={() => {
-                  setKeyboardAvoid(false);
-                }}
-                placeholder="Telefone"
-                style={{ width: "90%", height: 30, marginLeft: 5 }}
-              />
+              <Text>Loading</Text>
             </View>
-            <Text
-              style={{
-                marginHorizontal: 20,
-                textAlign: "center",
-                color: "#555",
-                marginTop: 20,
-              }}
-            >
-              Você pode receber atualizações por SMS do{" "}
-              <Text style={{ fontWeight: "bold" }}>Entrega +</Text> e pode
-              cancelar o recebimento a qualquer momento.
-            </Text>
           </>
         )}
-        <TouchableOpacity
-          onPress={() => {
-            setEnviado(!enviado)
-          }}
-          style={{
-            marginTop: 20,
-            height: 40,
-            borderRadius: 5,
-            width: "90%",
-            justifyContent: "center",
-            alignItems: "center",
-            marginHorizontal: "5%",
-            backgroundColor: "#333",
-          }}
-        >
-          <Text style={{ color: "#fff" }}>{enviado ? 'Confirmar' : 'Avançar'}</Text>
-        </TouchableOpacity>
       </>
     );
-  }, [telefone, enviado]);
-
-  const modalMarginI = Platform.OS === "ios" ? 0 : 15;
-  const modalHeight = 250;
-  const modalMargin = 210;
+  }, [items, adicionando]);
 
   return (
     <>
       <Modalize
         ref={modalizeRef}
         onOpened={() => handlerStateChange(true)}
-        onClosed={() => {
-          handlerStateChange(false);
-          setKeyboardAvoid(false);
-          setError("");
-        }}
-        modalHeight={keyboardAvoid ? modalHeight + modalMargin + modalMarginI : modalHeight + modalMarginI}
+        onClosed={() => {}}
+        modalHeight={460}
         HeaderComponent={() => renderHeader()}
       >
         {renderContent()}

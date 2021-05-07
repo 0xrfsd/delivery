@@ -17,8 +17,8 @@ import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
 
 import { Carousel } from "./Carousel";
 
-import { Carrinho } from "../../components/modals/Carrinho";
-import { SnappingList } from '../../components/modals/SnappingList';
+import { SnappingList } from "../../components/modals/SnappingList";
+import { Produto } from "../../components/modals/Produto";
 import { Entrega } from "../../components/modals/Entrega";
 
 import ImageCardOne from "../../assets/carrefour.png";
@@ -36,11 +36,9 @@ const CommerceScreen = ({ navigation, route }) => {
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
 
-  const [modal, setModal] = React.useState([])
+  const [modal, setModal] = React.useState([]);
 
-  React.useEffect(() => {
-  }, [])
-
+  React.useEffect(() => {}, []);
 
   const produtos = [
     "Alface",
@@ -57,20 +55,16 @@ const CommerceScreen = ({ navigation, route }) => {
   ];
 
   const searchHandler = (e) => {
-    setSearchTerm(e)
+    setSearchTerm(e);
     if (e !== "") {
-        const resultItems = produtos.filter((produto) => {
-            return Array(produto)
-                .join(" ")
-                .toLowerCase()
-                .includes(e.toLowerCase());
-        });
-        setSearchResults(resultItems);
+      const resultItems = produtos.filter((produto) => {
+        return Array(produto).join(" ").toLowerCase().includes(e.toLowerCase());
+      });
+      setSearchResults(resultItems);
+    } else {
+      setSearchResults(produtos);
     }
-    else {
-        setSearchResults(produtos);
-    }
-}
+  };
 
   const formatData = (produtos, numColumns) => {
     const totalRows = Math.floor(produtos.length / numColumns);
@@ -90,11 +84,10 @@ const CommerceScreen = ({ navigation, route }) => {
           borderRadius: 5,
           backgroundColor: "#333",
         }}
-        onPress={() =>
-          navigation.navigate("Commerce", {
-            name: item,
-          })
-        }
+        onPress={() => {
+          modal[1].a(item);
+          modal[1].openModal();
+        }}
       >
         <View
           style={{
@@ -123,7 +116,6 @@ const CommerceScreen = ({ navigation, route }) => {
       <TouchableOpacity
         onPress={() => modal[0].openModal()}
         style={{
-          marginLeft: "7%",
           marginTop: "-1.5%",
           display: "flex",
           flexDirection: "column",
@@ -144,17 +136,16 @@ const CommerceScreen = ({ navigation, route }) => {
             display: "flex",
             flexDirection: "row",
             backgroundColor: "#333",
-            padding: 3,
-            paddingRight: 3.5,
-            paddingBottom: 3.5,
+            paddingHorizontal: 2,
+            paddingVertical: 2,
             height: "auto",
-            width: 20,
+            width: '100%',
             borderRadius: 100,
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <Text style={{ color: "#fff" }}>{counter}</Text>
+          <Text style={{ color: "#fff", fontWeight: 'bold' }}>{counter}</Text>
         </View>
       </TouchableOpacity>
     );
@@ -162,140 +153,123 @@ const CommerceScreen = ({ navigation, route }) => {
 
   return (
     <>
-    <SafeAreaView>
-      <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
-        <View
-          style={{
-            padding: 15,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            style={{ marginTop: "-2%" }}
-            onPress={() => navigation.goBack()}
-          >
-            <FontAwesome5 name="arrow-left" size={24} color="black" />
-          </TouchableOpacity>
-          <Image
-            resizeMode={"contain"}
+      <SafeAreaView>
+        <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
+          <View
             style={{
-              marginLeft: "10%",
-              marginTop: "-1%",
-              height: 20,
-              width: "70%",
+              padding: 15,
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
             }}
-            source={ImageCardOne}
-          />
-          {renderCarrinho()}
+          >
+            <TouchableOpacity
+              style={{ marginTop: "-2%" }}
+              onPress={() => navigation.goBack()}
+            >
+              <FontAwesome5 name="arrow-left" size={24} color="black" />
+            </TouchableOpacity>
+            <Image
+              resizeMode={"contain"}
+              style={{
+                marginLeft: "10%",
+                marginTop: "-1%",
+                height: 20,
+                width: "70%",
+              }}
+              source={ImageCardOne}
+            />
+            {renderCarrinho()}
+          </View>
         </View>
-      </View>
-      <View style={{ display: "flex", flexDirection: "row" }}>
-      <TouchableOpacity
-          onPress={() => {
-            searchInput.current.clear();
-            setShowFilter(!showFilter);
-            Keyboard.dismiss();
-          }}
+        <View style={{ display: "flex", flexDirection: "row" }}>
+          <TextInput
+            value={searchTerm}
+            onChangeText={(e) => {
+              searchHandler(e);
+            }}
+            onBlur={() => {
+              // setSearchTerm("");
+              searchInput.current.clear();
+            }}
+            ref={searchInput}
+            placeholder="Pesquise por produtos ou marca"
+            style={{
+              borderRadius: 5,
+              padding: 10,
+              width: "80%",
+              marginLeft: "2%",
+              marginRight: "2%",
+              marginBottom: "5%",
+              backgroundColor: "transparent",
+              height: 50,
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              searchInput.current.clear();
+              setSearchTerm("");
+              Keyboard.dismiss();
+            }}
+            style={{
+              width: "13%",
+              height: 50,
+              borderRadius: 5,
+              backgroundColor: "transparent",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {searchTerm ? (
+              <MaterialIcons name="close" size={20} color={"#333"} />
+            ) : (
+              <Fontisto name="search" size={20} color={"#333"} />
+            )}
+          </TouchableOpacity>
+        </View>
+        {showFilter ? (
+          <View
+            style={{
+              width: "100%",
+              height: "100%",
+              padding: 20,
+              backgroundColor: "transparent",
+            }}
+          >
+            <TouchableOpacity>
+              <Text>Mercearia</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text>Mercearia</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text>Mercearia</Text>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text>Mercearia</Text>
+            </TouchableOpacity>
+          </View>
+        ) : null}
+  <FlatList
           style={{
             marginLeft: "5%",
-            width: "13%",
-            height: 50,
-            borderRadius: 5,
-            backgroundColor: "#333",
-            justifyContent: "center",
-            alignItems: "center",
+            marginRight: "5%",
+            width: "90%",
+            height: "81.3%",
           }}
-        >
-          {showFilter ? (
-            <Fontisto name="minus-a" size={20} color={"#fff"} />
-          ) : (
-            <Fontisto name="nav-icon-list-a" size={20} color={"#fff"} />
-          )}
-        </TouchableOpacity>
-        <TextInput
-          value={searchTerm}
-          onChangeText={(e) => {
-            searchHandler(e);
-          }}
-          onBlur={() => {
-            // setSearchTerm("");
-            searchInput.current.clear();
-          }}
-          ref={searchInput}
-          placeholder="Pesquise por produtos ou marca"
-          style={{
-            borderRadius: 5,
-            padding: 10,
-            width: "60%",
-            marginLeft: '2%',
-            marginRight: "2%",
-            marginBottom: "5%",
-            backgroundColor: "#fff",
-            height: 50,
-          }}
+          data={
+            searchTerm
+              ? formatData(searchResults, numColumns)
+              : formatData(produtos, numColumns)
+          }
+          renderItem={_renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          numColumns={numColumns}
         />
-        <TouchableOpacity
-          onPress={() => {
-            searchInput.current.clear();
-            setSearchTerm("");
-            Keyboard.dismiss();
-          }}
-          style={{
-            width: "13%",
-            height: 50,
-            borderRadius: 5,
-            backgroundColor: "#333",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {searchTerm ? (
-            <MaterialIcons name="close" size={20} color={"#fff"} />
-          ) : (
-            <Fontisto name="search" size={20} color={"#fff"} />
-          )}
-        </TouchableOpacity>
-      </View>
-      {showFilter 
-      ? (
-        <View style={{ width: '100%', height: '100%', padding: 20, backgroundColor: 'transparent' }}>
-          <TouchableOpacity>
-            <Text>Mercearia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Mercearia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Mercearia</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text>Mercearia</Text>
-          </TouchableOpacity>
-        </View>
-      )
-      : null
-      }
-      <FlatList
-        style={{
-          marginLeft: "5%",
-          marginRight: "5%",
-          width: "90%",
-          height: "77.3%",
-        }}
-        data={searchTerm ? formatData(searchResults, numColumns) : formatData(produtos, numColumns)}
-        renderItem={_renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        numColumns={numColumns}
-      />
-    </SafeAreaView>
-    <SnappingList
-        modal={modal}
-        setModal={setModal}
-        modalIndex={0}
-      />
-        </>
+      </SafeAreaView>
+      <Produto modal={modal} setModal={setModal} modalIndex={1} />
+      <SnappingList modal={modal} setModal={setModal} modalIndex={0} />
+    </>
   );
 };
 

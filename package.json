@@ -32,6 +32,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwt-decode": "^3.1.2",
     "mongoose": "^5.12.3",
+    "nodemailer": "^6.6.0",
     "picache2": "^2.0.0",
     "react": "16.13.1",
     "react-dom": "16.13.1",
