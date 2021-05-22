@@ -19,6 +19,7 @@
     "@react-navigation/stack": "^5.14.4",
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
+    "cep-promise": "^4.1.0",
     "concurrently": "^6.0.1",
     "cors": "^2.8.5",
     "expo": "~40.0.0",
@@ -40,11 +41,13 @@
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-google-places-autocomplete": "^2.2.0",
+    "react-native-maps": "^0.28.0",
     "react-native-modalize": "^2.0.8",
     "react-native-reanimated": "~1.13.0",
     "react-native-safe-area-context": "3.1.9",
     "react-native-screens": "~2.15.2",
     "react-native-web": "^0.15.6",
+    "simple-excel-to-json": "^2.3.0",
     "styled-components": "^5.2.3"
   },
   "devDependencies": {

@@ -67,10 +67,18 @@ export function RegisterModal(props) {
   const [senhaReq, setSenhaReq] = React.useState(""); // senha hook
   const [error, setError] = React.useState("");
   const [tipoReq, setTipoReq] = React.useState("consumer");
+  const [cepReq, setCepReq] = React.useState("");
 
+  const cepTextInput = React.createRef();
   const nameTextInput = React.createRef();
   const emailTextInput = React.createRef();
   const passwordTextInput = React.createRef();
+
+  // const maskCep = (value) => {
+  //   value = value.replace(/\D/g, ""); // numeros
+  //   value = value.replace(/^(\d${5})(\d)/, "$1-$2") // separa numeros em 2 sendo 0 = 5i 1 = it
+  //   return value;
+  // }
 
   const signInWithGoogle = async () => {
     try {
@@ -115,6 +123,7 @@ export function RegisterModal(props) {
         email: emailReq,
         senha: senhaReq,
         tipo: tipoReq,
+        cepreq: cepReq,
       })
       .then(async (response) => {
         if (response.status == 200) {
@@ -202,7 +211,7 @@ export function RegisterModal(props) {
               setEmailReq(email);
             }}
           />
-          <TextInput
+                              <TextInput
             onFocus={() => {
               if (keyboardAvoid === false) {
                 setKeyboardAvoid(true);
@@ -228,6 +237,34 @@ export function RegisterModal(props) {
               setSenhaReq(senha);
             }}
           />
+          <TextInput
+            onFocus={() => {
+              if (keyboardAvoid === false) {
+                setKeyboardAvoid(true);
+              } else {
+                setKeyboardAvoid(true);
+              }
+            }}
+            keyboardType="number-pad"
+            maxLength={8}
+            onBlur={() => {
+              setKeyboardAvoid(false);
+            }}
+            ref={cepTextInput}
+            style={{
+              width: "90%",
+              fontSize: 18,
+              marginVertical: 15,
+              marginHorizontal: 20,
+              borderRadius: 10,
+              color: "#333",
+            }}
+            placeholder="CEP"
+            onChangeText={(cep) => {
+              setCepReq(cep);
+            }}
+          />
+
           <View
             style={{
               marginTop: 5,

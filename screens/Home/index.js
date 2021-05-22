@@ -12,6 +12,7 @@ import {
   Keyboard,
   ImageBackground,
   LogBox,
+  Platform,
 } from "react-native";
 
 import Picache from "picache2";
@@ -55,6 +56,7 @@ const HomeScreen = ({ navigation }) => {
   const [counter, setCounter] = React.useState(0);
 
   const [location, setLocation] = React.useState(null);
+  const [locationA, setLocationA] = React.useState({});
   const [errorMsg, setErrorMsg] = React.useState(null);
 
   const [searchResults, setSearchResults] = React.useState([]);
@@ -169,7 +171,6 @@ const HomeScreen = ({ navigation }) => {
     text = errorMsg;
   } else if (location) {
     text = JSON.stringify(location);
-    console.log(text);
   }
 
   const commerces = [
@@ -278,7 +279,7 @@ const HomeScreen = ({ navigation }) => {
   const renderEntrega = () => {
     return (
       <Pressable
-        onPress={() => modal[1].openModal()}
+        onPress={() => navigation.navigate('Entrega')}
         style={{
           display: "flex",
           flexDirection: "row",
@@ -302,11 +303,10 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <>
-      <ImageBackground
-        source={Background}
+      <View
         style={{ height: "auto", width: "100%" }}
       >
-        <View style={{ marginTop: 20, display: "flex", flexDirection: "row" }}>
+        <View style={{ marginTop: Platform.OS === 'ios' ? 25 : 20, display: "flex", flexDirection: "row" }}>
           <TextInput
             value={searchTerm}
             onChangeText={(e) => {
@@ -421,7 +421,7 @@ const HomeScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-      </ImageBackground>
+      </View>
 
       <ScrollView style={{ backgroundColor: "#FCF8F5" }}>
         {showFilter ? null : (
@@ -731,7 +731,7 @@ const HomeScreen = ({ navigation }) => {
                       }
                     >
                       <Picache
-                        resizeMode="center"
+                        resizeMode="cover"
                         key={commerce.key}
                         source={commerce.image}
                         style={{

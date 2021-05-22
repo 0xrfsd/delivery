@@ -12,6 +12,8 @@ let User = require("./models/User");
 let Order = require("./models/Order");
 let Commerce = require("./models/Commerce");
 
+let cep = require("cep-promise");
+
 const user = "ricardo";
 const password = "Azd202020";
 const database = "dbOne";
@@ -42,8 +44,11 @@ app.post("/register", async (req, res) => {
   const psenha = req.body.senha;
   const tipo = req.body.tipo;
   const carrinho = req.body.carrinho;
+  const cepreq = req.body.cepreq;
 
   const exists = await User.findOne({ email }).lean();
+
+  const endereco = cep(cepreq)
 
   if (tipo.length == 0) {
     return res.json({ status: "error", error: "Seu tipo precisa ser definido" });
@@ -78,6 +83,7 @@ app.post("/register", async (req, res) => {
     username: nome,
     senha: senha,
     tipo: tipo,
+    cep: cepreq,
     carrinho: carrinho,
   });
   await user.save();
@@ -85,6 +91,7 @@ app.post("/register", async (req, res) => {
   const token = jwt.sign(
     {
       id: user.id,
+      cep: user.cep,
       email: user.email,
       nome: user.username,
       tipo: user.tipo,
@@ -97,16 +104,32 @@ app.post("/register", async (req, res) => {
 });
 
 app.post("/cart", async (req, res) => {
-  const userId = req.body.userId;
-  
-  const items = req.body.items;
-  const qtd = req.body.qtd;
-  const total = req.body.total;
 
-  const id = { _id: userId };
-  const update = { carrinho: { items, qtd, total} };
-  
-  await User.findByIdAndUpdate(id, update, {
+  const changes = [{"novostatus": "horadonovostatus"}];
+  const status = '';
+  const commerceId = "commerceId";
+  const userId = "6074c4189a48340c548a1199";
+  const commerceLocation = {latitude: 1, longitude: 2};
+  const userLocation = {latitude: 1, longitude: 2};
+  const data = "T:090240:11/05/2021";
+  const items = [
+    {
+      "id": "idproduto",
+      "produto": "Leite",
+      "qtd": 1,
+      "valor": 8
+    },
+    {
+      "id": "idproduto",
+      "produto": "Alface",
+      "qtd": 1,
+      "valor": 4
+    }
+  ]
+
+  const update = [commerceId, userId, commerceLocation, userLocation, data, items];
+
+  await User.findByIdAndUpdate({_id: userId}, { carrinho: update }, {
     new: true,
     useFindAndModify: false,
     upsert: true // Make this update into an upsert

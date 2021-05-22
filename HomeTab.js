@@ -46,7 +46,7 @@ const HomeTabNavigator = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <View style={{ display: "flex", flexDirection: "row" }}>
-              <FontAwesome5 name="clipboard-list" size={25} color={color} />
+              <FontAwesome5 name="clipboard-list" size={24} color={color} />
               {orderActive ? (
                 <View
                   style={{
@@ -56,7 +56,7 @@ const HomeTabNavigator = () => {
                     justifyContent: "center",
                     alignItems: "center",
                     borderRadius: 10,
-                    backgroundColor: '#f15454',
+                    backgroundColor: "#f15454",
                     position: "absolute",
                   }}
                 >
@@ -67,7 +67,7 @@ const HomeTabNavigator = () => {
                       justifyContent: "center",
                       alignItems: "center",
                       borderRadius: 10,
-                      backgroundColor: '#fff',
+                      backgroundColor: "#fff",
                       position: "absolute",
                     }}
                   />

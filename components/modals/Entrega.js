@@ -10,6 +10,8 @@ import { Modalize } from "react-native-modalize";
 
 import { MaterialIcons } from "@expo/vector-icons";
 
+import {useNavigation} from '@react-navigation/native';
+
 export class Entrega extends React.PureComponent {
   modal = React.createRef();
 
@@ -43,7 +45,9 @@ export class Entrega extends React.PureComponent {
               <Text style={{ fontSize: 16, color: '#555' }}>- Jardim Alexandrina, ...</Text>
             </View>
             <TouchableOpacity
-              onPress={() => alert('calma q ta vindo fdp')}
+              onPress={() => {
+                navigation.navigate('Entrega')
+              }}
               style={{
                 width: 100,
                 height: 50,

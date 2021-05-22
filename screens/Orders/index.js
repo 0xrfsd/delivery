@@ -16,7 +16,7 @@ import Store from "../../assets/baratao.jpg";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 const Orders = ({ navigation }) => {
-  const pedidos = ["", ""];
+  const pedidos = ['',''];
   const [activeOrder, setActiveOrder] = React.useState(false);
 
   const formatData = (pedidos, numColumns) => {
@@ -58,7 +58,7 @@ const Orders = ({ navigation }) => {
           }}
         >
           <Image
-            resizeMode="stretch"
+            resizeMode="cover"
             style={{ height: 170, width: "100%", marginBottom: 5, borderRadius: 5 }}
             source={Store}
           />

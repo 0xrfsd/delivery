@@ -25,7 +25,8 @@ export function Produto(props) {
   // alert(windowHeight);
 
   const [opened, setOpened] = useState(false);
-  const [items, setItems] = useState(0);
+
+  const [qtd, setQtd] = useState(0);
 
   const [adicionando, setAdicionando] = useState(true);
 
@@ -70,6 +71,11 @@ export function Produto(props) {
     });
   };
 
+  const addToCart = (e) => {
+    cart.qtd.push(e);
+    console.log(cart)
+  }
+
   const renderHeader = useCallback(() => {
     return (
       <>
@@ -77,7 +83,7 @@ export function Produto(props) {
           style={{
             borderTopLeftRadius: 50,
             borderTopRightRadius: 50,
-            height: 80,
+            height: 'auto',
             backgroundColor: "#fff",
             paddingBottom: 15,
             widht: "100%",
@@ -92,7 +98,7 @@ export function Produto(props) {
             }}
           >
             <View>
-              <Text style={{ fontWeight: "bold", fontSize: 26, width: "100%" }}>
+              <Text style={{ fontWeight: "bold", fontSize: 18, width: 300 }}>
                 {produto}
               </Text>
             </View>
@@ -105,7 +111,7 @@ export function Produto(props) {
         </View>
       </>
     );
-  }, [items, produto]);
+  }, [produto]);
 
   const renderContent = useCallback(() => {
     return (
@@ -153,10 +159,10 @@ export function Produto(props) {
               }}
             >
               <TouchableOpacity
-                disabled={items > 0 ? false : true}
+                disabled={qtd > 0 ? false : true}
                 onPress={() => {
-                  if (items > 0) {
-                    setItems(items - 1);
+                  if (qtd > 0) {
+                    setQtd(qtd - 1);
                   }
                 }}
                 style={{
@@ -179,11 +185,11 @@ export function Produto(props) {
                 }}
               >
                 <Text style={{ fontSize: 36, fontWeight: "bold" }}>
-                  {items}
+                  {qtd}
                 </Text>
               </View>
               <TouchableOpacity
-                onPress={() => setItems(items + 1)}
+                onPress={() => setQtd(qtd + 1)}
                 style={{
                   height: 70,
                   width: "33%",
@@ -198,8 +204,10 @@ export function Produto(props) {
             <TouchableOpacity
               onPress={() => {
                 setTimeout(() => {
+                  setQtd(qtd)
+                  setQtd(0);
                   closeModal();
-                }, 1000);
+                }, 100);
               }}
               style={{
                 height: 50,
@@ -232,7 +240,7 @@ export function Produto(props) {
         )}
       </>
     );
-  }, [items, adicionando]);
+  }, [qtd, adicionando]);
 
   return (
     <>

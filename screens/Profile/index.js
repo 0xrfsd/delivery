@@ -18,6 +18,7 @@ const ProfileScreen = ({ navigation }) => {
   const [userNome, setUserNome] = React.useState("");
   const [userEmail, setUserEmail] = React.useState("");
   const [userTipo, setUserTipo] = React.useState("");
+  const [userId, setUserId] = React.useState("");
 
   const nomeSobrenome = userNome.split(" ");
   const inicialNome = nomeSobrenome[0].slice(0,1);
@@ -38,6 +39,9 @@ const ProfileScreen = ({ navigation }) => {
 
         var t = d.tipo.split('"').join("");
         setUserTipo(t);
+
+        var i = d.id.split('"').join("");
+        setUserId(i)
       });
     } catch (e) {
       // error reading value
@@ -111,6 +115,7 @@ const ProfileScreen = ({ navigation }) => {
           navigation.navigate("Setting", {
             type: "Editar",
             nome: userNome,
+            userId,
             inicialNome: inicialNome,
             email: userEmail,
           })
@@ -176,7 +181,8 @@ const ProfileScreen = ({ navigation }) => {
             <View key={i}>
               <Pressable
                 onPress={() => navigation.navigate('Setting', {
-                  type: settings[i].title
+                  type: settings[i].title,
+                  userId
                 })}
                 style={{
                   padding: 15,

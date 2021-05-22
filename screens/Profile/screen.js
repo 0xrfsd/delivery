@@ -1,23 +1,20 @@
 import React from "react";
 
-import { Text, View, Pressable, SafeAreaView, TextInput } from "react-native";
+import { Text, View, Pressable, SafeAreaView, TouchableOpacity } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
 import { TelefoneModal } from "../../components/modals/Telefone";
 import { EmailModal } from "../../components/modals/Email";
+import { Endereco } from "../../components/modals/Endereco";
 
 const Screen = ({ navigation, route }) => {
-  const { type, nome, email, inicialNome } = route.params;
-
-  const nomeSobrenome = nome.split(" ");
-  const primeiroNome = nomeSobrenome[0];
-  const sobrenome = nomeSobrenome[1];
+  const { type, nome, email, inicialNome, userId } = route.params;
 
   const [modal, setModal] = React.useState([]);
 
   const types = [
-    "Convide um amigo",
+    "Convidar amigos",
     "Endereços",
     "Formas de pagamento",
     "Ajuda",
@@ -136,6 +133,28 @@ const Screen = ({ navigation, route }) => {
               height: "auto",
               width: "100%",
             }}
+            onPress={() => alert("Copiado")}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>Seu ID</Text>
+            <Text style={{ fontSize: 16, color: "#d3d3d3" }}>{userId}</Text>
+          </Pressable>
+        </View>
+        <View
+          style={{
+            marginTop: 10,
+            height: "auto",
+            paddingHorizontal: 20,
+            justifyContent: "space-between",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Pressable
+            style={{
+              paddingVertical: 10,
+              height: "auto",
+              width: "100%",
+            }}
             onPress={() => modal[1].openModal()}
           >
             <Text style={{ fontWeight: "bold", fontSize: 18 }}>Seu email</Text>
@@ -174,16 +193,44 @@ const Screen = ({ navigation, route }) => {
 
   const Convidar = () => {
     return (
-      <>
-        <Text>Convidar</Text>
-      </>
+      <View style={{ height: '80%', width: '100%', justifyContent: 'center', alignItems: 'center'}}>
+                      <Text style={{ textAlign: 'center', fontWeight: 'bold', color: '#333', fontSize: 20 }}>Indique o Entrega+ e ganhe R$ 10</Text>
+                      <Text style={{ marginHorizontal: 20, marginTop: 10, textAlign: 'center', color: '#333', fontSize: 14 }}>Compartilhe seu código com os amigos que ainda não pedem Entrega+. Eles ganham R$10 na primeira compra e você ganha mais R$10 em seu próximo pedido.</Text>
+                      <View style={{ width: '90%', margin: '5%', justifyContent: 'center', alignItems: 'center', height: 50, backgroundColor: '#f5f5f5', borderRadius: 5}}>
+                      <Text style={{ color: '#333', fontWeight: 'bold'}}>{userId}</Text>
+                      </View>
+                      <TouchableOpacity style={{ width: '90%', marginHorizontal: '5%', justifyContent: 'center', alignItems: 'center', height: 50, backgroundColor: '#333', borderRadius: 5}}>
+                      <Text style={{ color: '#fdfdfd'}}>Compartilhar</Text>
+                      </TouchableOpacity>
+      </View>
     );
   };
 
   const Enderecos = () => {
     return (
       <>
-        <Text>Enderecos</Text>
+                <View
+          style={{
+            marginTop: 10,
+            height: "auto",
+            paddingHorizontal: 20,
+            justifyContent: "space-between",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Pressable
+            style={{
+              paddingVertical: 10,
+              height: "auto",
+              width: "100%",
+            }}
+            onPress={() => modal[2].openModal()}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>Seu endereço</Text>
+            <Text style={{ fontSize: 16, color: "#d3d3d3" }}>Av. Presidente Kennedy 289</Text>
+          </Pressable>
+        </View>
       </>
     );
   };
@@ -191,7 +238,28 @@ const Screen = ({ navigation, route }) => {
   const Pagamento = () => {
     return (
       <>
-        <Text>Pagamento</Text>
+                <View
+          style={{
+            marginTop: 10,
+            height: "auto",
+            paddingHorizontal: 20,
+            justifyContent: "space-between",
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Pressable
+            style={{
+              paddingVertical: 10,
+              height: "auto",
+              width: "100%",
+            }}
+            onPress={() => modal[2].openModal()}
+          >
+            <Text style={{ fontWeight: "bold", fontSize: 18 }}>Suas formas de pagamento</Text>
+            <Text style={{ fontSize: 16, color: "#d3d3d3" }}>Adicionar cartão</Text>
+          </Pressable>
+        </View>
       </>
     );
   };
@@ -315,6 +383,7 @@ const Screen = ({ navigation, route }) => {
       </View>
       <TelefoneModal modal={modal} setModal={setModal} modalIndex={0} />
       <EmailModal modal={modal} setModal={setModal} modalIndex={1} />
+      <Endereco modal={modal} setModal={setModal} modalIndex={2} />
     </SafeAreaView>
   );
 };

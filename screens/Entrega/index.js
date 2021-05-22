@@ -4,11 +4,12 @@ import { Text, View, TouchableOpacity, Platform } from "react-native";
 
 import { FontAwesome5 } from "@expo/vector-icons";
 
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import MapView from "react-native-maps";
+import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 
-const EntregaScreen = ({ navigation }) => {
+const EntregaScreen = ({ navigation, locationA }) => {
   return (
-    <View style={{ paddingTop: Platform.OS === 'ios' ? 10 : 0 }}>
+    <View style={{ paddingTop: Platform.OS === "ios" ? 10 : 0 }}>
       <TouchableOpacity
         onPress={() => navigation.goBack()}
         style={{
@@ -47,33 +48,19 @@ const EntregaScreen = ({ navigation }) => {
           </View>
         </View>
       </TouchableOpacity>
-      <GooglePlacesAutocomplete
-      placeholder='Digite seu endereço'
-      onPress={(data, details = null) => {
-        // 'details' is provided when fetchDetails = true
-        console.log(data, details);
-      }}
-      query={{
-        key: 'AIzaSyAp0QdY1q4uP3MNYuT7v4SuXSeWQpO7xIc',
-        language: 'en',
-      }}
-      returnKeyType={'default'}
-      fetchDetails={true}
-      styles={{
-        textInputContainer: {
-          backgroundColor: '#fff',
-        },
-        textInput: {
-          marginHorizontal: 10,
-          height: 40,
-          color: '#333',
-          fontSize: 16,
-        },
-        predefinedPlacesDescription: {
-          color: '#1faadb',
-        },
-      }}
-    />
+      {/* <GooglePlacesAutocomplete
+        currentLocation={true}
+        currentLocationLabel={'Localização atual'}
+        placeholder="Pesquisar seu endereço"
+        onPress={(data, details = null) => {
+        }}
+        fetchDetails={true}
+        query={{
+          key: "AIzaSyAp0QdY1q4uP3MNYuT7v4SuXSeWQpO7xIc",
+          language: "pt-br",
+        }}
+        styles={{ listView: { position: 'absolute', marginTop: 40, height: 500, width: '100%'} }}
+      /> */}
     </View>
   );
 };

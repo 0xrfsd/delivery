@@ -28,7 +28,7 @@ export function SnappingList(props) {
   const modal = [];
 
   const [opened, setOpened] = useState(false);
-  const [cart, setCart] = useState(["", "", "", "", ""]);
+  const [cart, setCart] = useState(["", "", ""]);
   const [payment, setPayment] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState(false);
@@ -40,6 +40,8 @@ export function SnappingList(props) {
   const [cardNumber, setCardNumber] = useState("");
   const [expDate, setExpDate] = useState("");
   const [cvc, setCvc] = useState("");
+
+  const [mask, setMask] = useState("");
 
   const modalizeRef = useRef(<Modalize />);
 
@@ -544,7 +546,7 @@ export function SnappingList(props) {
                   </TouchableOpacity>
                   {cart.length > 0 ? (
                     <ScrollView style={s.content}>
-                      {Array(5)
+                      {Array(3)
                         .fill(0)
                         .map((_, i) => (
                           <TouchableOpacity

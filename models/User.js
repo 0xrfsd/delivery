@@ -14,11 +14,14 @@ let userSchema = new mongoose.Schema({
   senha: {
     type: String,
   },
+  cep: {
+    type: String,
+  },
   tipo: {
     type: String
   },
   carrinho: {
-    type: Object
+    type: Array,
   },
   cpf: {
     type: Number,

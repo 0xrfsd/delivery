@@ -13,7 +13,7 @@ import {
   Dimensions,
 } from "react-native";
 
-import { FontAwesome5, Fontisto, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, Fontisto, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import { Carousel } from "./Carousel";
 
@@ -22,6 +22,8 @@ import { Produto } from "../../components/modals/Produto";
 import { Entrega } from "../../components/modals/Entrega";
 
 import ImageCardOne from "../../assets/carrefour.png";
+
+import Data from "../../assets/data.json";
 
 const CommerceScreen = ({ navigation, route }) => {
   const { name } = route.params;
@@ -35,36 +37,96 @@ const CommerceScreen = ({ navigation, route }) => {
   const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
   const searchInput = React.createRef();
+  const [data, setData] = React.useState([]);
+
+  const [filter, setFilter] = React.useState("");
+  const [filtered, setFiltered] = React.useState([]);
+
+  const filters = [
+    "Mercado",
+    "Açougue",
+    "Limpeza",
+    "Padaria",
+    "Hortifruti",
+    "Higiene",
+  ];
 
   const [modal, setModal] = React.useState([]);
 
-  React.useEffect(() => {}, []);
+  React.useEffect(() => {
+    filters.map((i) => {
+      if (filter === i) {
+        filterHandler(filter);
+        console.log(filter);
+      }
+    });
+  }, [filter]);
 
-  const produtos = [
-    "Alface",
-    "Tomate",
-    "Rucola",
-    "Banana",
-    "Uva",
-    "Iogurte",
-    "Leite",
-    "Abacate",
-    "Carne Picanha",
-    "Carne Cupim",
-    "Carne Coxão Mole",
-  ];
+  const Produtos = Data.map((i) => {
+    return i.produto;
+  });
 
   const searchHandler = (e) => {
     setSearchTerm(e);
     if (e !== "") {
-      const resultItems = produtos.filter((produto) => {
+      const resultItems = Produtos.filter((produto) => {
         return Array(produto).join(" ").toLowerCase().includes(e.toLowerCase());
       });
       setSearchResults(resultItems);
     } else {
-      setSearchResults(produtos);
+      setSearchResults(Produtos);
     }
   };
+
+  const filterHandler = (e) => {
+    if (e !== "") {
+      const resultItems = Produtos.filter((produto) => {
+        return Array(produto).join(" ").toLowerCase().includes(e.toLowerCase());
+      });
+      setFiltered(resultItems);
+    } else {
+      setFiltered(Produtos);
+    }
+  };
+
+  const images = [
+    {
+      key: String(Math.random()),
+      image: require("../../assets/vick_vaporub.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/flan.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/rexona.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/rexona_sem_perfume.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/pastilha_valda.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/naftalina.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/flan_vigot.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/cocacola_ks.png"),
+    },
+    {
+      key: String(Math.random()),
+      image: require("../../assets/esparadrapo.png"),
+    },
+  ];
 
   const formatData = (produtos, numColumns) => {
     const totalRows = Math.floor(produtos.length / numColumns);
@@ -80,12 +142,13 @@ const CommerceScreen = ({ navigation, route }) => {
           marginRight: 10,
           marginTop: 10,
           width: "48.5%",
-          height: 120,
+          padding: 10,
+          height: "auto",
           borderRadius: 5,
-          backgroundColor: "#333",
+          backgroundColor: "transparent",
         }}
         onPress={() => {
-          modal[1].a(item);
+          modal[1].a(item.produto);
           modal[1].openModal();
         }}
       >
@@ -93,16 +156,17 @@ const CommerceScreen = ({ navigation, route }) => {
           style={{
             display: "flex",
             marginTop: "auto",
-            backgroundColor: "#333",
+            backgroundColor: "transparent",
             height: 40,
             width: "100%",
             justifyContent: "center",
-            alignItems: "center",
             borderBottomLeftRadius: 5,
             borderBottomRightRadius: 5,
           }}
         >
-          <Text style={{ color: "#fff" }}>{item}</Text>
+          <Text style={{ color: "#333", fontSize: 12, textAlign: "left" }}>
+            {item.produto}
+          </Text>
         </View>
       </TouchableOpacity>
     );
@@ -116,76 +180,70 @@ const CommerceScreen = ({ navigation, route }) => {
       <TouchableOpacity
         onPress={() => modal[0].openModal()}
         style={{
-          marginTop: "-1.5%",
           display: "flex",
           flexDirection: "column",
-          marginRight: 20,
         }}
       >
-        <FontAwesome5
+        <MaterialCommunityIcons
           key={1}
           style={{ marginTop: 1 }}
-          name="shopping-cart"
-          size={20}
+          name="cart-outline"
+          size={25}
           color={"#333"}
         />
-        <View
-          style={{
-            marginLeft: 25,
-            position: "absolute",
-            display: "flex",
-            flexDirection: "row",
-            backgroundColor: "#333",
-            paddingHorizontal: 2,
-            paddingVertical: 2,
-            height: "auto",
-            width: '100%',
-            borderRadius: 100,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <Text style={{ color: "#fff", fontWeight: 'bold' }}>{counter}</Text>
-        </View>
+        <View style={{ position: 'absolute', marginLeft: 25, height: 10, width: 10, borderRadius: 50, backgroundColor: '#f43'}}></View>   
       </TouchableOpacity>
     );
   };
 
   return (
     <>
-      <SafeAreaView>
-        <View style={{ marginTop: 10, display: "flex", flexDirection: "row" }}>
+      <SafeAreaView style={{ height: "100%", width: "100%" }}>
+        <View
+          style={{
+            height: "10%",
+            paddingHorizontal: 20,
+            paddingTop: 10,
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <View
             style={{
-              padding: 15,
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-around",
+              justifyContent: "space-between",
             }}
           >
-            <TouchableOpacity
-              style={{ marginTop: "-2%" }}
-              onPress={() => navigation.goBack()}
-            >
-              <FontAwesome5 name="arrow-left" size={24} color="black" />
+            <TouchableOpacity style={{}} onPress={() => navigation.goBack()}>
+              <FontAwesome5 name="arrow-left" size={25} color="black" />
             </TouchableOpacity>
-            <Image
-              resizeMode={"contain"}
-              style={{
-                marginLeft: "10%",
-                marginTop: "-1%",
-                height: 20,
-                width: "70%",
-              }}
-              source={ImageCardOne}
-            />
+            <Text style={{ fontSize: 18, marginTop: 5 }}>{name}</Text>
             {renderCarrinho()}
           </View>
         </View>
-        <View style={{ display: "flex", flexDirection: "row" }}>
+        <View
+          style={{
+            marginHorizontal: 10,
+            borderRadius: 5,
+            paddingHorizontal: 10,
+            backgroundColor: "#fff",
+            alignItems: "center",
+            justifyContent: "space-between",
+            display: "flex",
+            marginTop: 5,
+            flexDirection: "row",
+          }}
+        >
+          <FontAwesome5 name="bars" size={25} color="#999" />
           <TextInput
             value={searchTerm}
             onChangeText={(e) => {
+              if (e.length > 0) {
+              } else {
+                Keyboard.dismiss();
+                setShowFilter(false);
+              }
               searchHandler(e);
             }}
             onBlur={() => {
@@ -193,19 +251,17 @@ const CommerceScreen = ({ navigation, route }) => {
               searchInput.current.clear();
             }}
             ref={searchInput}
-            placeholder="Pesquise por produtos ou marca"
+            placeholder="Pesquisar"
             style={{
               borderRadius: 5,
-              padding: 10,
+              paddingHorizontal: 10,
               width: "80%",
-              marginLeft: "2%",
-              marginRight: "2%",
-              marginBottom: "5%",
-              backgroundColor: "transparent",
+              backgroundColor: "#fff",
               height: 50,
             }}
           />
           <TouchableOpacity
+            disabled={searchTerm ? false : true}
             onPress={() => {
               searchInput.current.clear();
               setSearchTerm("");
@@ -221,46 +277,82 @@ const CommerceScreen = ({ navigation, route }) => {
             }}
           >
             {searchTerm ? (
-              <MaterialIcons name="close" size={20} color={"#333"} />
+              <MaterialIcons name="close" size={24} color={"#333"} />
             ) : (
-              <Fontisto name="search" size={20} color={"#333"} />
+              <Fontisto name="search" size={20} color={"#999"} />
             )}
           </TouchableOpacity>
         </View>
-        {showFilter ? (
-          <View
-            style={{
-              width: "100%",
-              height: "100%",
-              padding: 20,
-              backgroundColor: "transparent",
-            }}
-          >
-            <TouchableOpacity>
-              <Text>Mercearia</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text>Mercearia</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text>Mercearia</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text>Mercearia</Text>
-            </TouchableOpacity>
-          </View>
-        ) : null}
-  <FlatList
+        <View
           style={{
-            marginLeft: "5%",
-            marginRight: "5%",
-            width: "90%",
-            height: "81.3%",
+            height: "10%",
+            width: "100%",
+            borderBottomLeftRadius: 5,
+            borderBottomRightRadius: 5,
+            display: "flex",
+            flexDirection: "row",
+          }}
+        >
+          <Carousel>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Mercado");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18, textAlign: 'center', color: '#333' }}>Mercado</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Açougue");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18 }}>Açougue</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Limpeza");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18 }}>Limpeza</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Padaria");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18 }}>Padaria</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Hortifruti");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18 }}>Hortifruti</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{ padding: 2, alignItems: "center", justifyContent: 'center'}}
+              onPress={() => {
+                setFilter("Higiene");
+              }}
+            >
+              <Text style={{ marginRight: 10, fontSize: 18 }}>Higiene</Text>
+            </TouchableOpacity>
+          </Carousel>
+        </View>
+        <FlatList
+          style={{
+            width: "100%",
+            height: "72.7%",
           }}
           data={
             searchTerm
               ? formatData(searchResults, numColumns)
-              : formatData(produtos, numColumns)
+              : formatData(Data, numColumns)
           }
           renderItem={_renderItem}
           keyExtractor={(item, index) => index.toString()}

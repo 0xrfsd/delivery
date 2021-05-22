@@ -72,6 +72,8 @@ export function LoginModal(props) {
   const [senha, setSenha] = React.useState("");
   const [error, setError] = React.useState("");
 
+  const format = /[ `!#$%^&*()_+\-=\[\]{};':"\\|,<>\/?~]/;
+
   const usernameTextInput = React.createRef();
   const emailTextInput = React.createRef();
   const passwordTextInput = React.createRef();
